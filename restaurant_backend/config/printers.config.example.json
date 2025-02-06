@@ -1,0 +1,21 @@
+[
+  {
+    "connectionType": "USB",
+    "printerName": "Model Name",
+    "usage": "customer-receipt"
+  },
+  {
+    "connectionType": "LAN",
+    "ip": "192.168.123.160",
+    "port": 9100,
+    "usage": "kitchen",
+    "categories": ["soda","liquor"]
+  },
+  {
+    "connectionType": "LAN",
+    "ip": "192.168.123.159",
+    "port": 9100,
+    "usage": "kitchen",
+    "categories": ["pizza","noodle"]
+  }
+]

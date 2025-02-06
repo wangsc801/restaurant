@@ -1,0 +1,68 @@
+/* Customize Modal Styles */
+.customize-modal {
+  width: 90%;
+  max-width: 800px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: white;
+}
+
+.customize-content {
+  padding: 40px;
+}
+
+.customize-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin: 24px 0;
+}
+
+.customize-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.customize-form .options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.customize-form .option-button {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.customize-form .option-button.selected {
+  background: #4CAF50;
+  color: white;
+  border-color: #4CAF50;
+}
+
+.customize-form input,
+.customize-form textarea {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.customize-form input:focus,
+.customize-form textarea:focus {
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
+}
+
+.customize-actions {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+} 

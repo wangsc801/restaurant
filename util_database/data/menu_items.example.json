@@ -1,0 +1,14 @@
+[
+  {
+    "title": "Cheese Burger",
+    "subtitle": "",
+    "tags": ["burger", "cheese", "fastfood"],
+    "categories": ["Burger"],
+    "price": 15.0,
+    "unit": "",
+    "description": "",
+    "moneySymbol": "$",
+    "imagePath": "",
+    "abbr": "CB"
+  }
+]

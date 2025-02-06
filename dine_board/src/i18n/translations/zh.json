@@ -1,0 +1,27 @@
+{
+  "dashboard":{
+    "dashboard": "主页",
+    "selectBranch": "选择分店",
+    "selectCategories": "选择类别",
+    "confirmSelect": "确认选择"
+  },
+  "orderFlow": {
+    "title": "订单信息流",
+    "home": "主页",
+    "mute": "静音",
+    "unmute": "取消静音",
+    "orderNumber": "订单 #{{number}}",
+    "remark": "备注"
+  },
+  "orderItem": {
+    "plated": "已装盘",
+    "notPlated": "未做好",
+    "delivered": "已送达",
+    "notDelivered": "未送达",
+    "loading": "加载中...",
+    "spiciness": "辣度",
+    "seasoning": "调味",
+    "ingredients": "配料",
+    "customRemark": "备注"
+  }
+} 

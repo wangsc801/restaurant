@@ -1,0 +1,21 @@
+{
+  "orderFlow": {
+    "title": "Order Information Flow",
+    "home": "Home",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "orderNumber": "Order #{{number}}",
+    "remark": "Remark"
+  },
+  "orderItem": {
+    "plated": "Plated",
+    "notPlated": "Not Plated",
+    "delivered": "Delivered",
+    "notDelivered": "Not Delivered",
+    "loading": "Loading...",
+    "spiciness": "Spiciness",
+    "seasoning": "Seasoning",
+    "ingredients": "Ingredients",
+    "customRemark": "Custom Remark"
+  }
+} 
