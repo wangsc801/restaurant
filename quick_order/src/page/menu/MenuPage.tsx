@@ -62,14 +62,16 @@ const MenuPage = () => {
     initializeState();
   }, []);
 
-  // Save state when orders changes
+  // Modify the useEffect for localStorage to handle empty orders
   useEffect(() => {
-    if (orders.length > 0) {  // Only save if there are orders
-      try {
+    try {
+      if (orders.length > 0) {  // Only save if there are orders
         localStorage.setItem('menuPageState', JSON.stringify({ orders: orders }));
-      } catch (error) {
-        console.error('In MenuPage: Error saving state:', error);
+      } else {
+        localStorage.removeItem('menuPageState');
       }
+    } catch (error) {
+      console.error('In MenuPage: Error saving state:', error);
     }
   }, [orders]);
 
@@ -146,7 +148,14 @@ const MenuPage = () => {
   };
 
   const handleDeleteOrder = (index: number) => {
-    setOrders(prev => prev.filter((_, i) => i !== index));
+    // setOrders(prev => prev.filter((_, i) => i !== index));
+    setOrders(prev => {
+      const newOrders = prev.filter((_, i) => i !== index);
+      if (newOrders.length === 0) {
+        localStorage.removeItem('menuPageState');
+      }
+      return newOrders;
+    })
   };
 
   const handleCheckout = () => {

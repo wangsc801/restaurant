@@ -41,7 +41,6 @@ const CategoriesSelector = () => {
   const handleConfirm = () => {
     if (selectedCategories.length > 0) {
       const categoriesParam = selectedCategories.join('&');
-      console.log(categoriesParam)
       navigate(`/orders/categories/${categoriesParam}`);
     }
   };

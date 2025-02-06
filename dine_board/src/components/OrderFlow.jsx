@@ -9,8 +9,8 @@ import { useTranslation } from 'react-i18next';
 // Create a single shared audio instance
 const audioInstances = {
   default: new Audio("/Luna.mp3"),
-  ding: new Audio("/Merope.mp3"),
-  hum: new Audio("/Corbalt.mp3"),
+  // ding: new Audio("/Merope.mp3"),
+  // hum: new Audio("/Corbalt.mp3"),
 };
 
 // Initialize audio instances
@@ -60,7 +60,7 @@ const OrderFlow = ({
     const client = new Client({
       webSocketFactory: () => socket,
       onConnect: () => {
-        console.log("Connected to WebSocket");
+        // console.log("Connected to WebSocket");
         client.subscribe(`/topic/order-item/update`, (message) => {
           const data = JSON.parse(message.body);
           onOrderItemUpdate(data.orderId, data.itemId, data.updates);

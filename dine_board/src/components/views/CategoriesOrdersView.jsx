@@ -67,7 +67,7 @@ const CategoriesOrdersView = () => {
       const client = new Client({
         webSocketFactory: () => socket,
         onConnect: () => {
-          console.log("Connected to WebSocket");
+          // console.log("Connected to WebSocket");
           unsubscribeAll();
 
           // Subscribe to new orders for each category
@@ -76,7 +76,6 @@ const CategoriesOrdersView = () => {
               `/topic/orders/new/category/${category}/branch-id/${branchId}`,
               (message) => {
                 const newOrder = JSON.parse(message.body);
-                // console.log("New order received:", newOrder);
                 
                 // Only add the order if it's not already in the list
                 if (!orderIdsRef.current.has(newOrder.id)) {
@@ -93,7 +92,6 @@ const CategoriesOrdersView = () => {
             `/topic/order-item/update`,
             (message) => {
               const data = JSON.parse(message.body);
-              console.log("Order item update received:", data);
               setOrders(prevOrders =>
                 prevOrders.map((order) => {
                   if (order.id === data.orderId) {
@@ -114,7 +112,7 @@ const CategoriesOrdersView = () => {
           subscriptions.current.set('updates', updateSubscription);
         },
         onDisconnect: () => {
-          console.log("Disconnected from WebSocket");
+          // console.log("Disconnected from WebSocket");
           unsubscribeAll();
         },
         onStompError: (frame) => {

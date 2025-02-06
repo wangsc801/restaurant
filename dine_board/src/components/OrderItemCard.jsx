@@ -33,7 +33,6 @@ const OrderItemCard = ({ item, orderId }) => {
     try {
       const endPoint = isDelivered ? "not-delivered" : "delivered";
       const api = `${config.API_BASE_URL}/api/order-record/${orderId}/order-item/${item.id}/${endPoint}`;
-      console.log("api of handle dievered: ", api);
       const response = await axios.post(api);
       // if (response.data === !isDelivered) {
       //   setIsDelivered(!isDelivered);
