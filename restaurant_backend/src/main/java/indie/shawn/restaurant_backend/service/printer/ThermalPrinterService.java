@@ -66,6 +66,7 @@ public class ThermalPrinterService {
                 EscPos escpos = new EscPos(steam);
                 escpos.setCharsetName("GB18030");
                 escposCustomerReceiptTemplate(escpos, orderRecord);
+                // escposCustomerReceiptTemplate(escpos, orderRecord);
             }
             if ("USB".equals(config.getConnectionType())) {
                 PrintService printService = PrinterOutputStream.getPrintServiceByName(config.getPrinterName());
@@ -73,7 +74,7 @@ public class ThermalPrinterService {
                 escpos = new EscPos(new PrinterOutputStream(printService));
                 escpos.setCharsetName("GB18030");
                 escposCustomerReceiptTemplate(escpos, orderRecord);
-
+                // escposCustomerReceiptTemplate(escpos, orderRecord);
             }
         }
     }

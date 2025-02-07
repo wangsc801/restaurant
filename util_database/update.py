@@ -1,6 +1,6 @@
 import json
 from sys import argv
-from datetime import datetime
+import datetime
 from pymongo import MongoClient
 from pathlib import Path
 
@@ -39,7 +39,7 @@ def update_collection(db_info_path, collection_file):
                 print(json.dumps(doc, indent=2))
             
             if input("\nAdd these documents? (y/N): ").lower() == 'y':
-                current_time = datetime.utcnow()
+                current_time = datetime.datetime.now(datetime.timezone.utc)
                 for doc in docs_to_add:
                     doc.update({
                         "created_at": current_time,
@@ -55,7 +55,7 @@ def update_collection(db_info_path, collection_file):
                 print(json.dumps(doc, indent=2))
             
             if input("\nAdd to local file? (y/N): ").lower() == 'y':
-                current_time = datetime.utcnow()
+                current_time = datetime.datetime.now(datetime.timezone.utc)
                 all_docs = local_data + extra_docs
                 for doc in all_docs:
                     doc["updated_at"] = current_time

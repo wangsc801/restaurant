@@ -14,6 +14,7 @@ const BranchSelection = () => {
     const fetchBranches = async () => {
       try {
         const response = await axios.get(`${config.API_BASE_URL}/api/branch`);
+        console.log(`${config.API_BASE_URL}/api/branch`)
         setBranches(response.data);
         setLoading(false);
       } catch (error) {

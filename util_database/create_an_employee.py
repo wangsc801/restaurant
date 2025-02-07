@@ -1,7 +1,7 @@
 import argparse
 import bcrypt
 from pymongo import MongoClient
-from datetime import datetime
+import datetime
 import json
 from sys import argv
 
@@ -26,7 +26,7 @@ def create_employee(db_info_path, branch_code, name, password):
         hashed = bcrypt.hashpw(password_bytes, bcrypt.gensalt())
         
         # Create employee document
-        current_time = datetime.utcnow()
+        current_time = datetime.datetime.now(datetime.timezone.utc)
         employee = {
             "branch_id": str(branch["_id"]),
             "name": name,
