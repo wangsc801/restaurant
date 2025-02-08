@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+
 @RestController
 @RequestMapping("/api/statistic")
 public class StatisticController {
@@ -15,8 +17,7 @@ public class StatisticController {
     StatisticService statisticService;
 
     @GetMapping("/total/date/{date}/branch-id/{branchId}")
-    public Double todayTotal(@PathVariable String date, @PathVariable String branchId){
-        var total = statisticService.totalOfToday(date,branchId);
-        return total;
+    public Double totalOfTheDate(@PathVariable String date, @PathVariable String branchId){
+        return statisticService.totalOfTheDate(date,branchId);
     }
 }

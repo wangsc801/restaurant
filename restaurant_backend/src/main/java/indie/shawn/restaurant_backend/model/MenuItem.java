@@ -15,7 +15,7 @@ public class MenuItem {
     private String subtitle;
     private List<String> tags;
     private List<String> categories;
-    private BigDecimal price;
+    private Double price;
     private String moneySymbol;
     private String unit;
     private String abbr;
@@ -71,11 +71,11 @@ public class MenuItem {
         this.categories = categories;
     }
 
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 

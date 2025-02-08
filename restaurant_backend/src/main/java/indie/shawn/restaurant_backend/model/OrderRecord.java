@@ -22,9 +22,9 @@ public class OrderRecord {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private List<OrderItem> orderItems;
-    private BigDecimal subtotal;
+    private Double subtotal;
     private double discount;
-    private BigDecimal total;
+    private Double total;
     private String paymentMethod;
     private String paymentStatus; // PENDING, PAID, FAILED
     private String orderStatus;   // NEW, PREPARING, READY, COMPLETED, CANCELLED
@@ -129,12 +129,20 @@ public class OrderRecord {
         this.orderItems = orderItems;
     }
 
-    public BigDecimal getSubtotal() {
+    public Double getSubtotal() {
         return subtotal;
     }
 
-    public void setSubtotal(BigDecimal subtotal) {
+    public void setSubtotal(Double subtotal) {
         this.subtotal = subtotal;
+    }
+
+    public Double getTotal() {
+        return total;
+    }
+
+    public void setTotal(Double total) {
+        this.total = total;
     }
 
     public double getDiscount() {
@@ -143,14 +151,6 @@ public class OrderRecord {
 
     public void setDiscount(double discount) {
         this.discount = discount;
-    }
-
-    public BigDecimal getTotal() {
-        return total;
-    }
-
-    public void setTotal(BigDecimal total) {
-        this.total = total;
     }
 
     public String getPaymentMethod() {
