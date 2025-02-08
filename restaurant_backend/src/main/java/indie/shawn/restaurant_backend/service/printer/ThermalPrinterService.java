@@ -47,35 +47,46 @@ public class ThermalPrinterService {
 
     public void printKitchenReceipt(OrderRecord orderRecord) throws IOException {
         List<ThermalPrinterJsonConfig> configs = printerConfigs.stream().filter(o -> "kitchen".equals(o.getUsage())).toList();
+        EscPos escpos = null;
         for (var config : configs) {
             if ("LAN".equals(config.getConnectionType())) {
+                System.out.println(config);
                 TcpIpOutputStream steam = new TcpIpOutputStream(config.getIp(), config.getPort());
-                EscPos escpos = new EscPos(steam);
+                escpos = new EscPos(steam);
                 escpos.setCharsetName("GB18030");
                 escposPrintKitchenTemplate(escpos, orderRecord, config.getCategories());
+                steam.close();
+                escpos.close();
             }
+        }
+        if (escpos != null) {
+            escpos.close();
         }
     }
 
     public void printCustomerReceipt(OrderRecord orderRecord) throws IOException {
         List<ThermalPrinterJsonConfig> configs = printerConfigs.stream()
                 .filter(o -> "customer-receipt".equals(o.getUsage())).toList();
+        EscPos escpos = null;
         for (var config : configs) {
             if ("LAN".equals(config.getConnectionType())) {
                 TcpIpOutputStream steam = new TcpIpOutputStream(config.getIp(), config.getPort());
-                EscPos escpos = new EscPos(steam);
+                escpos = new EscPos(steam);
                 escpos.setCharsetName("GB18030");
                 escposCustomerReceiptTemplate(escpos, orderRecord);
-                // escposCustomerReceiptTemplate(escpos, orderRecord);
+                escposCustomerReceiptTemplate(escpos, orderRecord);
             }
             if ("USB".equals(config.getConnectionType())) {
                 PrintService printService = PrinterOutputStream.getPrintServiceByName(config.getPrinterName());
-                EscPos escpos;
+//                EscPos escpos;
                 escpos = new EscPos(new PrinterOutputStream(printService));
                 escpos.setCharsetName("GB18030");
                 escposCustomerReceiptTemplate(escpos, orderRecord);
-                // escposCustomerReceiptTemplate(escpos, orderRecord);
+                escposCustomerReceiptTemplate(escpos, orderRecord);
             }
+        }
+        if (escpos != null) {
+            escpos.close();
         }
     }
 
@@ -119,7 +130,7 @@ public class ThermalPrinterService {
                 escpos.writeLF(itemPriceQuantityStyle, "  " + price + "元");
             }
             escpos.feed(1);
-            if (!item.getSpiciness().isEmpty())
+            if (item.getSpiciness()!=null || !item.getSpiciness().isEmpty())
                 escpos.writeLF(itemFlavorStyle, "  辣度：" + item.getSpiciness());
             if (!item.getSeasoning().isEmpty())
                 escpos.writeLF(itemFlavorStyle, "  调味：" + String.join(", ", item.getSeasoning()));
@@ -143,7 +154,7 @@ public class ThermalPrinterService {
         escpos.feed(5);
         escpos.writeLF("\n");
         escpos.cut(EscPos.CutMode.FULL);
-        escpos.close();
+//        escpos.close();
     }
 
     private void escposCustomerReceiptTemplate(EscPos escpos, OrderRecord orderRecord) throws IOException {
@@ -172,11 +183,13 @@ public class ThermalPrinterService {
             }
             escpos.feed(1);
         }
+        escpos.writeLF("合计："+orderRecord.getTotal()+"元");
         escpos.writeLF(orderRecord.getOrderedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-        escpos.feed(3);
+        escpos.feed(1);
         escpos.writeLF(paymentStyle, "支付方式：" + orderRecord.getPaymentMethod());
-        escpos.feed(3);
+        escpos.feed(2);
+        escpos.writeLF(".");
         escpos.cut(EscPos.CutMode.FULL);
-        escpos.close();
+//        escpos.close();
     }
 }
