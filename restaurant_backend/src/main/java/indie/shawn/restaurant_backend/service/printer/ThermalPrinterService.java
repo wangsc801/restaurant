@@ -120,30 +120,30 @@ public class ThermalPrinterService {
         for (var item : orderItemsForPrintSet) {
             escpos.writeLF(itemStyle, item.getTitle());
             escpos.feed(1);
-            var price = item.getPrice();
+            double price = item.getPrice();
             if (item.getQuantity() > 1) {
                 var quantity = item.getQuantity();
-                var itemTotal = price.multiply(new BigDecimal(quantity));
+                var itemTotal = price * quantity;
                 String text = "  " + price + "元x" + quantity + " [" + itemTotal + "元]";
                 escpos.writeLF(itemPriceQuantityStyle, text);
             } else {
                 escpos.writeLF(itemPriceQuantityStyle, "  " + price + "元");
             }
             escpos.feed(1);
-            if (item.getSpiciness()!=null || !item.getSpiciness().isEmpty())
-                escpos.writeLF(itemFlavorStyle, "  辣度：" + item.getSpiciness());
+//            if (item.getSpiciness()!=null || !item.getSpiciness().isEmpty())
+//                escpos.writeLF(itemFlavorStyle, "  辣度：" + item.getSpiciness());
             if (!item.getSeasoning().isEmpty())
                 escpos.writeLF(itemFlavorStyle, "  调味：" + String.join(", ", item.getSeasoning()));
             if (!item.getIngredients().isEmpty())
                 escpos.writeLF(itemFlavorStyle, "  食材：" + String.join(", ", item.getIngredients()));
-            if(!item.getCustomRemark().isEmpty()){
-                escpos.writeLF(itemStyle," 备注："+item.getCustomRemark());
+            if (!item.getCustomRemark().isEmpty()) {
+                escpos.writeLF(itemStyle, " 备注：" + item.getCustomRemark());
             }
             escpos.feed(1);
             escpos.writeLF(itemPriceQuantityStyle, "----------");
         }
         escpos.feed(1);
-        if(!orderRecord.getRemark().isEmpty()){
+        if (!orderRecord.getRemark().isEmpty()) {
             escpos.writeLF(itemStyle, "订单备注：" + orderRecord.getRemark());
         }
         escpos.feed(1);
@@ -175,7 +175,7 @@ public class ThermalPrinterService {
             var price = item.getPrice();
             if (item.getQuantity() > 1) {
                 var quantity = item.getQuantity();
-                var itemTotal = price.multiply(new BigDecimal(quantity));
+                double itemTotal = price*quantity;
                 String text = "  " + price + "元x" + quantity + " [" + itemTotal + "元]";
                 escpos.writeLF(itemPriceQuantity, text);
             } else {
@@ -183,7 +183,7 @@ public class ThermalPrinterService {
             }
             escpos.feed(1);
         }
-        escpos.writeLF("合计："+orderRecord.getTotal()+"元");
+        escpos.writeLF("合计：" + orderRecord.getTotal() + "元");
         escpos.writeLF(orderRecord.getOrderedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         escpos.feed(1);
         escpos.writeLF(paymentStyle, "支付方式：" + orderRecord.getPaymentMethod());

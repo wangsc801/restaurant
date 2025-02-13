@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 import { Branch } from '../../types/Branch';
 import { Employee } from '../../types/Employee';
 import './HomePage.css';
+import dayjs from 'dayjs';
 
 const MainPage = () => {
+  const { date } = useParams();
+  console.log(date)
+  const formattedDate = dayjs().format('YYYY-MM-DD');
+
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [branch, setBranch] = useState<Branch | null>(null);
@@ -60,15 +66,15 @@ const MainPage = () => {
 
             <button
               className="option-button"
-            // onClick={() => navigate('/reservation')}
+            onClick={() => navigate('/category-statistics/'+formattedDate)}
             >
               <span className="icon">📅</span>
-              <span className="text">Reservation Management</span>
+              <span className="text">Today</span>
             </button>
 
             <button
               className="option-button"
-              onClick={() => navigate('/add-item')}
+              // onClick={() => navigate('/add-item')}
             >
               <span className="icon">➕</span>
               <span className="text">{t('main.addItem')}</span>

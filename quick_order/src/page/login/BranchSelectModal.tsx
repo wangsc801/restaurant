@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import {Branch} from '../types/branch';
+import { Branch } from '../../types/Branch'
 
 interface BranchSelectModalProps {
   onClose: () => void;
@@ -8,7 +8,7 @@ interface BranchSelectModalProps {
 }
 
 const BranchSelectModal = ({ onClose, onSelect }: BranchSelectModalProps) => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [branches, setBranches] = useState<Branch[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -48,14 +48,14 @@ const BranchSelectModal = ({ onClose, onSelect }: BranchSelectModalProps) => {
     <dialog ref={dialogRef} className="branch-select-modal" onClick={handleModalClick}>
       <div className="modal-content">
         <h2>{t('login.selectBranch')}</h2>
-        
+
         {isLoading ? (
           <div className="loading">{t('loading')}</div>
         ) : (
           <div className="branches-list">
             {branches.map((branch) => (
-              <div 
-                key={branch.code} 
+              <div
+                key={branch.code}
                 className="branch-item"
                 onClick={() => onSelect(branch)}
               >

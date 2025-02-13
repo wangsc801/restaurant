@@ -10,7 +10,7 @@ public class OrderItem {
     private String id;
     private String menuItemId;
     private String title;        // Name of the menu item
-    private BigDecimal price;    // Price per unit
+    private Double price;    // Price per unit
     private Integer quantity;
     private List<String> categories;
     private String spiciness;    // Changed to single String to match TypeScript
@@ -46,7 +46,7 @@ public class OrderItem {
         this.title = title;
     }
 
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
@@ -58,7 +58,7 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
