@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import './CategoryStatistic.css'
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import dayjs from 'dayjs';
 // import dayjs from 'dayjs';
 interface SimpleMenuItemStatistic {
   menuItemTitle: string;
@@ -11,14 +12,16 @@ interface SimpleMenuItemStatistic {
 export default function CategoryStatistic() {
 
   const { date } = useParams();
+  const navigate = useNavigate();
 
   const [statisticMap, setStatisticMap] = useState<Record<string, SimpleMenuItemStatistic[]>>({});
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
+    const branchId = JSON.parse(localStorage.branch).id;
     const fetchData = async () => {
       // const formattedDate = dayjs().format('YYYY-MM-DD');
-      const branchId = JSON.parse(localStorage.branch).id;
-      const url = `http://192.168.2.39:8080/api/statistic/category/date/${date}/branch-id/${branchId}`;
+      const url = `http://localhost:8080/api/statistic/category/date/${date}/branch-id/${branchId}`;
       const response = await fetch(url)
       const data = await response.json()
       // // 转换数据结构
@@ -31,12 +34,36 @@ export default function CategoryStatistic() {
       // setStatisticMap(transformedData);
       setStatisticMap(data);
     }
+    const fetchTotal = async () => {
+      const url = `http://localhost:8080/api/statistic/total/date/${date}/branch-id/${branchId}`;
+      const response = await fetch(url);
+      const total = await response.json()
+      setTotal(total);
+    }
     fetchData();
-  }, []);
+    fetchTotal();
+  }, [date]);
+
+  const handlePreviousDay = () => {
+    const previousDay = dayjs(date).subtract(1, 'day').format('YYYY-MM-DD');
+    navigate(`/category-statistics/${previousDay}`);
+  };
+
+  const handleNextDay = () => {
+    const nextDay = dayjs(date).add(1, 'day').format('YYYY-MM-DD');
+    navigate(`/category-statistics/${nextDay}`);
+  };
+
+  const handleBackToMenu = () =>{
+    navigate(`/menu`);
+  }
+  const isToday = dayjs(date).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD');
 
   return (
     <div className='container'>
-      <div>CategoryStatistic</div>
+      <div style={{ display: 'flex', justifyContent: 'center', margin: '20px'}}>
+        <button onClick={handleBackToMenu}>Back</button>
+      </div>
       {Object.keys(statisticMap).length > 0 ? (
         Object.entries(statisticMap).map(([category, statisticArray]) => {
           // 计算 Quantity 和 Total 的总计
@@ -76,6 +103,14 @@ export default function CategoryStatistic() {
       ) : (
         <p>No statistics available.</p>
       )}
+      <div style={{ display: 'flex', justifyContent: 'center', margin: '20px'}}>
+        <span>{date && date+": "}</span>
+        <span style={{ fontWeight: 'bold'}} >{total}</span>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '20px' }}>
+        <button onClick={handlePreviousDay}>Previous Day</button>
+        <button onClick={handleNextDay} disabled={isToday}>Next Day</button>
+      </div>
     </div>
   );
 }

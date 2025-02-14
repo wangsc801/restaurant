@@ -11,6 +11,8 @@ import java.util.List;
 // import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.Arrays;
+import java.text.Collator;
+import java.util.Locale;
 
 @Service
 public class MenuItemService {
@@ -23,7 +25,25 @@ public class MenuItemService {
     }
 
     public List<MenuItem> findAll() {
-        return menuItemRepository.findAll();
+        List<MenuItem> items = menuItemRepository.findAll();
+        
+        // Create a Chinese collator for pinyin sorting
+        Collator collator = Collator.getInstance(Locale.CHINESE);
+        
+        // Sort items by title (using pinyin) first, then by price
+        items.sort((item1, item2) -> {
+            // First compare by title using Chinese collator
+            int titleCompare = collator.compare(item1.getTitle(), item2.getTitle());
+            
+            // If titles are same, compare by price
+            if (titleCompare == 0) {
+                return Double.compare(item1.getPrice(), item2.getPrice());
+            }
+            
+            return titleCompare;
+        });
+        
+        return items;
     }
 
     public MenuItem findById(String id) {

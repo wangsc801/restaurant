@@ -10,12 +10,15 @@ interface MenuItemCardProps {
 
 const MenuItemCard: React.FC<MenuItemCardProps> = ({ item, onViewDetails }) => {
     const navigate = useNavigate();
-
+    
+    // Create proper data URL from base64 string
+    const imageUrl = item.image ? `data:image/jpeg;base64,${item.image}` : '';
+    
     return (
         <div className="menu-item-card">
-            <img 
-                src={'http://localhost:8080'+item.imagePath} 
-                alt={item.title} 
+            <img
+                src={imageUrl}
+                alt={item.title}
                 className="menu-item-image"
             />
             <div className="menu-item-content">
@@ -32,13 +35,13 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({ item, onViewDetails }) => {
                     ))}
                 </div>
                 <div className="card-actions">
-                    <button 
+                    <button
                         onClick={() => navigate(`/menu-items/update/${item.id}`)}
                         className="update-button"
                     >
                         Update
                     </button>
-                    <button 
+                    <button
                         onClick={() => onViewDetails(item.id)}
                         className="details-button"
                     >

@@ -9,7 +9,7 @@ export interface MenuItem {
     unit: string;
     abbr: string;
     description: string;
-    imagePath: string;
+    image: string;
     createdAt: string;
     updatedAt: string;
     remark: string;

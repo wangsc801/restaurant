@@ -28,8 +28,8 @@ const UpdateMenuItem: React.FC = () => {
         try {
             const data = await menuItemService.getMenuItem(itemId);
             setItem(data);
-            // For server images, add the base URL
-            setImagePreview(`http://localhost:8080${data.imagePath}`);
+            // Set image preview using the binary data
+            setImagePreview(`data:image/jpeg;base64,${data.image}`);
         } catch (error) {
             setError('Failed to load menu item');
         }
@@ -87,19 +87,30 @@ const UpdateMenuItem: React.FC = () => {
         if (!validateForm() || !item) return;
 
         try {
-            let newImagePath = item.imagePath;
+            let imageData = item.image; // Use existing image if no new one uploaded
             
             if (imageFile) {
-                const formData = new FormData();
-                formData.append('file', imageFile);
-                newImagePath = await menuItemService.uploadImage(formData);
+                // Convert the file to base64
+                const reader = new FileReader();
+                imageData = await new Promise((resolve, reject) => {
+                    reader.onload = () => {
+                        if (typeof reader.result === 'string') {
+                            // Extract base64 data without the data URL prefix
+                            const base64Data = reader.result.split(',')[1];
+                            resolve(base64Data);
+                        }
+                    };
+                    reader.onerror = reject;
+                    reader.readAsDataURL(imageFile);
+                });
             }
 
             const updatedItem: MenuItem = {
                 ...item,
-                imagePath: newImagePath
+                image: imageData
             };
             
+            console.log(updatedItem)
             await menuItemService.updateMenuItem(updatedItem);
             navigate('/menu-items');
         } catch (error) {

@@ -21,6 +21,7 @@ public class MenuItem {
     private String abbr;
     private String description;
     private String imagePath;
+    private byte[] image;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String remark;
@@ -141,6 +142,14 @@ public class MenuItem {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     @Override

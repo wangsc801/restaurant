@@ -18,13 +18,4 @@ export const menuItemService = {
         const response = await axios.post(`${API_URL}/add`, item);
         return response.data;
     },
-
-    uploadImage: async (formData: FormData): Promise<string> => {
-        const response = await axios.post(`${API_URL}/upload-image`, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
-        return response.data;
-    },
 }; 

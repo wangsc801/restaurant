@@ -1,6 +1,5 @@
 package indie.shawn.restaurant_backend.controller;
 
-import indie.shawn.restaurant_backend.model.statistic.CategoryStatistic;
 import indie.shawn.restaurant_backend.model.statistic.SimpleMenuItemStatistic;
 import indie.shawn.restaurant_backend.service.StatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
