@@ -20,6 +20,7 @@ i18n
             total: 'Total',
             loading: 'Loading...',
             backToMain: 'Back to Main',
+            item: 'item',
           },
           login: {
             title: 'Restaurant Login',
@@ -31,7 +32,7 @@ i18n
             enterName: 'Enter your name',
             enterPassword: 'Enter your password',
           },
-          main: {
+          home: {
             order: "Menu",
             orderManagement: "Order Management",
             addItem: "Add Item",
@@ -100,6 +101,10 @@ i18n
             selectImage: 'Click to select image',
             image: 'Item Image',
           },
+          statistic: {
+            previousDay: "previous day",
+            nextDay: "next day",
+          }
         }
       },
       zh: {
@@ -115,6 +120,8 @@ i18n
             total: '合计',
             loading: '加载中...',
             backToMain: '返回主页',
+            item: '项目',
+            remark: '备注',
           },
           login: {
             title: '餐厅登录',
@@ -126,11 +133,12 @@ i18n
             enterName: '请输入姓名',
             enterPassword: '请输入密码',
           },
-          main: {
+          home: {
             order: "菜单",
             orderManagement: "订单管理",
             addItem: "添加商品",
             transactionRecord: "交易记录",
+            today: "今日情况"
           },
           menu: {
             allItems: '所有餐品',
@@ -195,6 +203,10 @@ i18n
             selectImage: 'Click to select image',
             image: 'Item Image',
           },
+          statistic: {
+            previousDay: "前一天",
+            nextDay: "后一天",
+          }
         }
       }
     },

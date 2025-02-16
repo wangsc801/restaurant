@@ -13,6 +13,10 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import javax.print.PrintService;
+import javax.print.attribute.Attribute;
+import javax.print.attribute.AttributeSet;
+import javax.print.attribute.PrintServiceAttribute;
+import javax.print.DocFlavor;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -53,39 +57,59 @@ public class ThermalPrinterService {
 
         int successCount = 0;
         for (var config : configs) {
-            if (!"LAN".equals(config.getConnectionType())) {
-                continue;
-            }
-
-            Socket socket = null;
-            TcpIpOutputStream stream = null;
             EscPos escpos = null;
             try {
-                // Create socket with timeout
-                socket = new Socket();
-                socket.connect(
-                        new InetSocketAddress(config.getIp(), config.getPort()),
-                        5000  // 5 second connection timeout
-                );
-                socket.setSoTimeout(5000);  // 5 second read timeout
-
-                // Create output stream from socket
-                stream = new TcpIpOutputStream(config.getIp(), config.getPort());
-                escpos = new EscPos(stream);
-                escpos.setCharsetName("GB18030");
-                escposPrintKitchenTemplate(escpos, orderRecord, config.getCategories());
-
-                // Print success message
-                successCount++;
-                System.out.println("Successfully printed to printer at " + config.getIp() + ":" + config.getPort()
-                        + " (" + config.getPrinterName() + ")");
-
+                if ("ByName".equals(config.getConnectionType())) {
+                    // For USB connected printer
+                    PrintService printService = PrinterOutputStream.getPrintServiceByName(config.getPrinterName());
+                    if (printService == null) {
+                        System.err.println("Printer not found: " + config.getPrinterName());
+                        continue;
+                    }
+                    
+                    PrinterOutputStream printerOutputStream = new PrinterOutputStream(printService);
+                    escpos = new EscPos(printerOutputStream);
+                    escpos.setCharsetName("GB18030");
+                    escposPrintKitchenTemplate(escpos, orderRecord, config.getCategories());
+                    
+                    // Ensure proper flushing and closing
+                    escpos.flush();
+                    successCount++;
+                    System.out.println("Successfully printed to USB printer: " + config.getPrinterName());
+                }
+                
+                if ("LAN".equals(config.getConnectionType())) {
+                    // For network printer
+                    Socket socket = null;
+                    try {
+                        socket = new Socket();
+                        socket.connect(
+                            new InetSocketAddress(config.getIp(), config.getPort()),
+                            500  // 0.5 second timeout
+                        );
+                        
+                        // Create output stream directly from socket
+                        escpos = new EscPos(socket.getOutputStream());
+                        escpos.setCharsetName("GB18030");
+                        escposPrintKitchenTemplate(escpos, orderRecord, config.getCategories());
+                        
+                        // Ensure proper flushing
+                        escpos.flush();
+                        successCount++;
+                        System.out.println("Successfully printed to network printer at " + config.getIp() + ":" + config.getPort());
+                    } finally {
+                        if (socket != null) {
+                            try {
+                                socket.close();
+                            } catch (IOException e) {
+                                // Ignore close errors
+                            }
+                        }
+                    }
+                }
             } catch (IOException e) {
-                // Log the error but continue with other printers
-                System.err.println("Failed to print to printer at " + config.getIp() + ":" + config.getPort()
-                        + " (" + config.getPrinterName() + ") - " + e.getMessage());
+                System.err.println("Failed to print to printer " + config.getPrinterName() + ": " + e.getMessage());
             } finally {
-                // Close resources in reverse order
                 if (escpos != null) {
                     try {
                         escpos.close();
@@ -93,28 +117,6 @@ public class ThermalPrinterService {
                         // Ignore close errors
                     }
                 }
-                if (stream != null) {
-                    try {
-                        stream.close();
-                    } catch (IOException e) {
-                        // Ignore close errors
-                    }
-                }
-                if (socket != null) {
-                    try {
-                        socket.close();
-                    } catch (IOException e) {
-                        // Ignore close errors
-                    }
-                }
-            }
-
-            if ("USB".equals(config.getConnectionType())) {
-                PrintService printService = PrinterOutputStream.getPrintServiceByName(config.getPrinterName());
-//                EscPos escpos;
-                escpos = new EscPos(new PrinterOutputStream(printService));
-                escpos.setCharsetName("GB18030");
-                escposCustomerReceiptTemplate(escpos, orderRecord);
             }
         }
 
@@ -124,8 +126,6 @@ public class ThermalPrinterService {
         } else {
             System.out.println("Successfully printed to " + successCount + " out of " + configs.size() + " kitchen printers");
         }
-
-
     }
 
     public void printCustomerReceipt(OrderRecord orderRecord) throws IOException {
@@ -140,7 +140,7 @@ public class ThermalPrinterService {
                 escposCustomerReceiptTemplate(escpos, orderRecord);
                 escposCustomerReceiptTemplate(escpos, orderRecord);
             }
-            if ("USB".equals(config.getConnectionType())) {
+            if ("ByName".equals(config.getConnectionType())) {
                 PrintService printService = PrinterOutputStream.getPrintServiceByName(config.getPrinterName());
 //                EscPos escpos;
                 escpos = new EscPos(new PrinterOutputStream(printService));
@@ -156,7 +156,6 @@ public class ThermalPrinterService {
     }
 
     private void escposPrintKitchenTemplate(EscPos escpos, OrderRecord orderRecord, List<String> deviceConfigCategories) throws IOException {
-
         Set<OrderItem> orderItemsForPrintSet = new HashSet<>();
         for (int i = 0; i < orderRecord.getOrderItems().size(); i++) {
             var item = orderRecord.getOrderItems().get(i);
@@ -214,12 +213,13 @@ public class ThermalPrinterService {
         escpos.feed(1);
         String formattedOrderedAt = orderRecord.getOrderedAt().format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm"));
         escpos.writeLF(orderedAtStyle, formattedOrderedAt);
-        escpos.feed(1);
-        escpos.writeLF(paymentStyle, "支付方式：" + orderRecord.getPaymentMethod());
-        escpos.feed(5);
+        escpos.feed(2);
+//        escpos.writeLF(paymentStyle, "支付方式：" + orderRecord.getPaymentMethod());
+//        escpos.feed(5);
         escpos.writeLF("\n");
         escpos.cut(EscPos.CutMode.FULL);
-//        escpos.close();
+//        escpos.pulsePin(Pin.PIN_2, 120, 240);
+        escpos.flush();
     }
 
     private void escposCustomerReceiptTemplate(EscPos escpos, OrderRecord orderRecord) throws IOException {
@@ -227,24 +227,23 @@ public class ThermalPrinterService {
                 .setFontSize(Style.FontSize._3, Style.FontSize._3)
                 .setBold(true)
                 .setJustification(EscPosConst.Justification.Center);
-        Style itemStyle = new Style().setFontSize(Style.FontSize._2, Style.FontSize._2).setBold(true);
-        Style itemPriceQuantity = new Style().setFontSize(Style.FontSize._2, Style.FontSize._2);
-        Style itemFlavorStyle = new Style().setFontSize(Style.FontSize._1, Style.FontSize._1);
-        Style paymentStyle = new Style().setFontSize(Style.FontSize._1, Style.FontSize._1);
+        Style styleBoldSize2 = new Style().setFontSize(Style.FontSize._2, Style.FontSize._2).setBold(true);
+        Style styleSize2 = new Style().setFontSize(Style.FontSize._2, Style.FontSize._2);
+        Style styleSize1 = new Style().setFontSize(Style.FontSize._1, Style.FontSize._1);
         escpos.writeLF(orderNumberStyle, orderRecord.getOrderNumber() + "号");
         escpos.feed(2);
         for (int i = 0; i < orderRecord.getOrderItems().size(); i++) {
             var item = orderRecord.getOrderItems().get(i);
-            escpos.write(itemStyle, (i + 1) + ". ");
-            escpos.writeLF(itemStyle, item.getTitle());
-            if (item.getSpiciness() != null)
-                escpos.writeLF(itemFlavorStyle, "  辣度：" + item.getSpiciness());
+            escpos.write(styleBoldSize2, (i + 1) + ". ");
+            escpos.writeLF(styleBoldSize2, item.getTitle());
+            if (item.getSpiciness() != null || item.getSpiciness().isEmpty())
+                escpos.writeLF(styleSize1, "  辣度：" + item.getSpiciness());
             if (!item.getSeasoning().isEmpty())
-                escpos.writeLF(itemFlavorStyle, "  调味：" + String.join(", ", item.getSeasoning()));
+                escpos.writeLF(styleSize1, "  调味：" + String.join(", ", item.getSeasoning()));
             if (!item.getIngredients().isEmpty())
-                escpos.writeLF(itemFlavorStyle, "  食材：" + String.join(", ", item.getIngredients()));
+                escpos.writeLF(styleSize1, "  食材：" + String.join(", ", item.getIngredients()));
             if (!item.getCustomRemark().isEmpty()) {
-                escpos.writeLF(itemStyle, " 备注：" + item.getCustomRemark());
+                escpos.writeLF(styleBoldSize2, " 备注：" + item.getCustomRemark());
             }
             escpos.feed(1);
             var price = item.getPrice();
@@ -252,20 +251,19 @@ public class ThermalPrinterService {
                 var quantity = item.getQuantity();
                 double itemTotal = price * quantity;
                 String text = "  " + price + "元x" + quantity + " [" + itemTotal + "元]";
-                escpos.writeLF(itemPriceQuantity, text);
+                escpos.writeLF(styleSize2, text);
             } else {
-                escpos.writeLF(itemPriceQuantity, "  " + price + "元");
+                escpos.writeLF(styleSize2, "  " + price + "元");
             }
             escpos.feed(1);
         }
-        escpos.writeLF(itemPriceQuantity, "合计：" + orderRecord.getTotal() + "元");
+        escpos.writeLF(styleSize2, "合计：" + orderRecord.getTotal() + "元");
         escpos.writeLF(orderRecord.getOrderedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         escpos.feed(1);
-        escpos.writeLF(itemPriceQuantity, "支付方式：" + orderRecord.getPaymentMethod());
+        escpos.writeLF(styleSize1, "支付方式：" + orderRecord.getPaymentMethod());
         escpos.feed(2);
 
         escpos.writeLF(".");
         escpos.cut(EscPos.CutMode.FULL);
-//        escpos.close();
     }
 }

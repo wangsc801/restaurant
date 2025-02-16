@@ -18,6 +18,7 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,7 +38,7 @@ public class OrderRecordService {
                 .filter(item -> item.getId() == null) // Filter out items that do not have an ID set
                 .forEach(item -> item.setId(String.valueOf(new ObjectId())));
         if (!isReserve) {
-            var now = LocalDateTime.now();
+            var now = LocalDateTime.now(ZoneId.systemDefault());
             orderRecord.setCreatedAt(now);
             orderRecord.setUpdatedAt(now);
             orderRecord.setOrderedAt(now);

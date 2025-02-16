@@ -5,6 +5,7 @@ import OrderFlow from "../OrderFlow";
 import config from "../../config/config";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
+import { WebSocketService } from "../../services/WebSocketService";
 
 const CategoriesOrdersView = () => {
   const { categories } = useParams();
@@ -55,83 +56,16 @@ const CategoriesOrdersView = () => {
 
   // WebSocket connection
   useEffect(() => {
-    let stompClient = null;
-
-    const unsubscribeAll = () => {
-      subscriptions.current.forEach(subscription => subscription.unsubscribe());
-      subscriptions.current.clear();
-    };
-
-    const connectWebSocket = () => {
-      const socket = new SockJS(`${config.WS_URL}`);
-      const client = new Client({
-        webSocketFactory: () => socket,
-        onConnect: () => {
-          // console.log("Connected to WebSocket");
-          unsubscribeAll();
-
-          // Subscribe to new orders for each category
-          targetCategories.forEach((category) => {
-            const subscription = client.subscribe(
-              `/topic/orders/new/category/${category}/branch-id/${branchId}`,
-              (message) => {
-                const newOrder = JSON.parse(message.body);
-                
-                // Only add the order if it's not already in the list
-                if (!orderIdsRef.current.has(newOrder.id)) {
-                  orderIdsRef.current.add(newOrder.id);
-                  setOrders(prevOrders => [newOrder, ...prevOrders]);
-                }
-              }
-            );
-            subscriptions.current.set(category, subscription);
-          });
-
-          // Subscribe to order item updates
-          const updateSubscription = client.subscribe(
-            `/topic/order-item/update`,
-            (message) => {
-              const data = JSON.parse(message.body);
-              setOrders(prevOrders =>
-                prevOrders.map((order) => {
-                  if (order.id === data.orderId) {
-                    return {
-                      ...order,
-                      orderItems: order.orderItems.map((item) =>
-                        item.id === data.itemId
-                          ? { ...item, ...data.updates }
-                          : item
-                      ),
-                    };
-                  }
-                  return order;
-                })
-              );
-            }
-          );
-          subscriptions.current.set('updates', updateSubscription);
-        },
-        onDisconnect: () => {
-          // console.log("Disconnected from WebSocket");
-          unsubscribeAll();
-        },
-        onStompError: (frame) => {
-          console.error("STOMP error:", frame);
-          unsubscribeAll();
-        },
-      });
-
-      client.activate();
-      stompClient = client;
-    };
-
-    connectWebSocket();
+    const wsService = new WebSocketService(setOrders);
+    
+    // Set initial order IDs after fetching orders
+    wsService.setInitialOrderIds(orders);
+    
+    // Connect to WebSocket for each category
+    wsService.connect(`/topic/orders/new/category/${category}/branch-id/${branchId}`);
 
     return () => {
-      unsubscribeAll();
-      if (stompClient && stompClient.connected) {
-        stompClient.deactivate();
-      }
+      wsService.disconnect();
     };
   }, []);
 

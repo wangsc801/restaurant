@@ -161,7 +161,8 @@ const CheckoutSlide = ({ orderItems, totalPrice, paymentMethod, onClose, onConfi
         <div className="error-message">
           {t('checkout.printerError')}
         </div>
-      )*/}
+      )*/
+      }
     </div>
   );
 };

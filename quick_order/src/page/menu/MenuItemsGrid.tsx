@@ -27,7 +27,14 @@ const MenuItemsGrid = ({
         {(selectedCategory === 'all' ? menuItems : groupByCategory[selectedCategory] || [])
           .map(item => (
             <div key={item.id} className="items-card">
-              <img src={item.image ? `data:image/jpeg;base64,${item.image}` : ''} alt={item.title} />
+              {item.image ? (
+                <img 
+                  src={`data:image/jpeg;base64,${item.image}`} 
+                  alt={item.title} 
+                />
+              ) : (
+                <div className="no-image-placeholder"></div>
+              )}
               <div className="items-info">
                 <h3>{item.title}</h3>
                 <p className="price">

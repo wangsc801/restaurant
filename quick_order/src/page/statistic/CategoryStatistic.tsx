@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import './CategoryStatistic.css'
 import { useParams, useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
 // import dayjs from 'dayjs';
 interface SimpleMenuItemStatistic {
   menuItemTitle: string;
@@ -10,7 +11,7 @@ interface SimpleMenuItemStatistic {
 }
 
 export default function CategoryStatistic() {
-
+  const { t } = useTranslation();
   const { date } = useParams();
   const navigate = useNavigate();
 
@@ -54,15 +55,15 @@ export default function CategoryStatistic() {
     navigate(`/category-statistics/${nextDay}`);
   };
 
-  const handleBackToMenu = () =>{
+  const handleBackToMenu = () => {
     navigate(`/menu`);
   }
   const isToday = dayjs(date).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD');
 
   return (
     <div className='container'>
-      <div style={{ display: 'flex', justifyContent: 'center', margin: '20px'}}>
-        <button onClick={handleBackToMenu}>Back</button>
+      <div style={{ display: 'flex', justifyContent: 'center', margin: '20px' }}>
+        <button onClick={handleBackToMenu}>{t('common.back')}</button>
       </div>
       {Object.keys(statisticMap).length > 0 ? (
         Object.entries(statisticMap).map(([category, statisticArray]) => {
@@ -76,9 +77,9 @@ export default function CategoryStatistic() {
               <table style={{ borderCollapse: "collapse", width: "30vw", margin: "0 auto" }}>
                 <thead>
                   <tr>
-                    <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left" }}>Menu Item</th>
-                    <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left" }}>Quantity</th>
-                    <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left" }}>Total</th>
+                    <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left" }}>{t('common.item')}</th>
+                    <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left" }}>{t('common.quantity')}</th>
+                    <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left" }}>{t('common.subtotal')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -91,7 +92,7 @@ export default function CategoryStatistic() {
                   ))}
                   {/* 添加总计行 */}
                   <tr style={{ fontWeight: "bold", background: "#f0f0f0" }}>
-                    <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right" }}>Total:</td>
+                    <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right" }}>{t('common.total')}</td>
                     <td style={{ border: "1px solid #ddd", padding: "8px" }}>{totalQuantity}</td>
                     <td style={{ border: "1px solid #ddd", padding: "8px" }}>{totalSum.toFixed(2)}</td>
                   </tr>
@@ -103,13 +104,13 @@ export default function CategoryStatistic() {
       ) : (
         <p>No statistics available.</p>
       )}
-      <div style={{ display: 'flex', justifyContent: 'center', margin: '20px'}}>
-        <span>{date && date+": "}</span>
-        <span style={{ fontWeight: 'bold'}} >{total}</span>
+      <div style={{ display: 'flex', justifyContent: 'center', margin: '20px' }}>
+        <span>{date && date + ": "}</span>
+        <span style={{ fontWeight: 'bold' }} >{total}</span>
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '20px' }}>
-        <button onClick={handlePreviousDay}>Previous Day</button>
-        <button onClick={handleNextDay} disabled={isToday}>Next Day</button>
+        <button onClick={handlePreviousDay}>{t('statistic.previousDay')}</button>
+        <button onClick={handleNextDay} disabled={isToday}>{t('statistic.nextDay')}</button>
       </div>
     </div>
   );

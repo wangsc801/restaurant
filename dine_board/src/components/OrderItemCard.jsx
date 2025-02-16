@@ -58,9 +58,8 @@ const OrderItemCard = ({ item, orderId }) => {
 
   return (
     <div
-      className={`rounded-lg p-4 flex flex-col md:flex-row gap-4 ${
-        isPlated ? "bg-yellow-200" : "bg-gray-50"
-      }`}
+      className={`rounded-lg p-4 flex flex-col md:flex-row gap-4 ${isPlated ? "bg-yellow-200" : "bg-gray-50"
+        }`}
     >
       {/* Item Details */}
       <div className="flex-1">
@@ -81,37 +80,37 @@ const OrderItemCard = ({ item, orderId }) => {
 
         {item.spiciness && (
           <div className="text-gray-600 ml-4 mb-1">
-            <span className="font-semibold text-gray-700 mr-2">
+            <span className="font-semibold text-xl text-red-700 mr-2">
               {t("orderItem.spiciness")}:
+              {item.spiciness}
             </span>
-            {item.spiciness}
           </div>
         )}
 
         {item.seasoning?.length > 0 && (
           <div className="text-gray-600 ml-4 mb-1">
-            <span className="font-semibold text-gray-700 mr-2">
+            <span className="font-semibold text-xl text-amber-700 mr-2">
               {t("orderItem.seasoning")}:
+              {item.seasoning.join(", ")}
             </span>
-            {item.seasoning.join(", ")}
           </div>
         )}
 
         {item.ingredients?.length > 0 && (
           <div className="text-gray-600 ml-4 mb-1">
-            <span className="font-semibold text-gray-700 mr-2">
+            <span className="font-semibold text-xl text-lime-700 mr-2">
               {t("orderItem.ingredients")}:
+              {item.ingredients.join(", ")}
             </span>
-            {item.ingredients.join(", ")}
           </div>
         )}
 
         {item.customRemark && (
           <div className="text-gray-600 ml-4 mb-1">
-            <span className="font-semibold text-gray-700 mr-2">
+            <span className="font-semibold text-xl text-purple-800 mr-2">
               {t("orderItem.customRemark")}:
+              {item.customRemark}
             </span>
-            {item.customRemark}
           </div>
         )}
       </div>
@@ -121,17 +120,16 @@ const OrderItemCard = ({ item, orderId }) => {
         <button
           onClick={handlePlatedToggle}
           disabled={isPlatedLoading}
-          className={`flex-1 px-4 py-2 ${
-            isPlatedLoading
+          className={`flex-1 px-4 py-2 ${isPlatedLoading
               ? "bg-gray-100 text-gray-500 cursor-not-allowed"
               : "bg-blue-50 hover:bg-blue-100 text-blue-700"
-          } rounded-md transition-colors`}
+            } rounded-md transition-colors`}
         >
           {isPlatedLoading
             ? t("orderItem.loading")
             : isPlated
-            ? t("orderItem.notPlated")
-            : t("orderItem.plated")}
+              ? t("orderItem.notPlated")
+              : t("orderItem.plated")}
         </button>
         <button
           onClick={handleDeliveredToggle}
@@ -141,8 +139,8 @@ const OrderItemCard = ({ item, orderId }) => {
           {isDeliveredLoading
             ? t("orderItem.loading")
             : isDelivered
-            ? t("orderItem.notDelivered")
-            : t("orderItem.delivered")}
+              ? t("orderItem.notDelivered")
+              : t("orderItem.delivered")}
         </button>
       </div>
     </div>

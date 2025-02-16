@@ -32,12 +32,13 @@ export interface OrderRecord {
   branchId: string | null;
   employeeId: string | null;
   tableCode: string | null;
-  isReservation : boolean|null;
+  isReservation: boolean | null;
   guestCount: number | null;
   total: number;
   paymentMethod: string | null;
   orderStatus: string | null;
   customerName: string | null;
   customerPhone: string | null;
+  orderedAt: string | null;
   remark: string;
 }

@@ -52,7 +52,7 @@ const MainPage = () => {
             onClick={() => navigate('/menu')}
           >
             <span className="icon">🛍️</span>
-            <span className="text">{t('main.order')}</span>
+            <span className="text">{t('home.order')}</span>
           </button>
 
           <div className="secondary-options">
@@ -61,7 +61,7 @@ const MainPage = () => {
             // onClick={() => navigate('/order-management')}
             >
               <span className="icon">📋</span>
-              <span className="text">{t('main.orderManagement')}</span>
+              <span className="text">{t('home.orderManagement')}</span>
             </button>
 
             <button
@@ -69,7 +69,7 @@ const MainPage = () => {
             onClick={() => navigate('/category-statistics/'+formattedDate)}
             >
               <span className="icon">📅</span>
-              <span className="text">Today</span>
+              <span className="text">{t('home.today')}</span>
             </button>
 
             <button
@@ -77,15 +77,15 @@ const MainPage = () => {
               // onClick={() => navigate('/add-item')}
             >
               <span className="icon">➕</span>
-              <span className="text">{t('main.addItem')}</span>
+              <span className="text">{t('home.addItem')}</span>
             </button>
 
             <button
               className="option-button"
-            // onClick={() => navigate('/transactions')}
+            onClick={() => navigate('/order-records/hours/12')}
             >
               <span className="icon">💰</span>
-              <span className="text">{t('main.transactionRecord')}</span>
+              <span className="text">{t('home.transactionRecord')}</span>
             </button>
           </div>
         </div>

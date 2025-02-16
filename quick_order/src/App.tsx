@@ -8,6 +8,7 @@ import LoginPage from './page/login/LoginPage';
 import HomePage from './page/home/HomePage';
 import MenuPage from './page/menu/MenuPage';
 import "./i18n/i18n";
+import OrderRecordRecentHours from './page/record/OrderRecordRecentHours';
 import CategoryStatistic from './page/statistic/CategoryStatistic';
 function Navigation() {
 
@@ -43,6 +44,7 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/home" element={<HomePage />} />
               <Route path="/menu" element={<MenuPage />} />
+              <Route path="/order-records/hours/:hours" element={<OrderRecordRecentHours />} />
               <Route path="/category-statistics/:date" element={<CategoryStatistic />} />
             </Routes>
           ) : (

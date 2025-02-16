@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import OrderFlow from "../OrderFlow";
 import config from "../../config/config";
+import { WebSocketService } from "../../services/WebSocketService";
 
 const RecentOrdersView = () => {
   const [orders, setOrders] = useState([]);
@@ -9,12 +10,15 @@ const RecentOrdersView = () => {
   const branchId = localStorage.getItem("branchId");
 
   useEffect(() => {
+    const wsService = new WebSocketService(setOrders);
+
     const fetchOrders = async () => {
       try {
         const response = await axios.get(
           `${config.API_BASE_URL}/api/order-record/get-recent-quantity/100/branch-id/${branchId}`
         );
         setOrders(response.data);
+        wsService.setInitialOrderIds(response.data);
         setError(null);
       } catch (error) {
         console.error("Error fetching orders:", error);
@@ -24,6 +28,13 @@ const RecentOrdersView = () => {
 
     // Initial fetch
     fetchOrders();
+
+    // Connect to WebSocket
+    wsService.connect(`/topic/orders/new/branch-id/${branchId}`);
+
+    return () => {
+      wsService.disconnect();
+    };
   }, [branchId]);
 
   // Handle WebSocket updates
