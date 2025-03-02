@@ -5,6 +5,7 @@ import { Branch } from '../../types/Branch';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { LanguageSelector } from './LanguageSelector';
+import config from '../../config'
 
 const LoginPage = () => {
   const { t } = useTranslation();
@@ -26,7 +27,7 @@ const LoginPage = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:8080/api/employee/sign_in', {
+      const response = await fetch(`${config.API_BASE_URL}/api/employee/sign_in`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

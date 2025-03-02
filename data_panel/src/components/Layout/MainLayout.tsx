@@ -21,6 +21,11 @@ const MainLayout: React.FC = () => {
                                 Today Categories
                             </Link>
                         </li>
+                        <li>
+                            <Link to={`/categories/sort`} className="menu-button">
+                                Sort Categories
+                            </Link>
+                        </li>
                     </ul>
                 </nav>
             </div>

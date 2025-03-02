@@ -1,4 +1,5 @@
 import { OrderItem, OrderRecord } from '../types/Order';
+import config from '../config'
 
 export async function createOrderRecord({
   orderItems,
@@ -7,7 +8,8 @@ export async function createOrderRecord({
   employee,
   totalPrice,
   paymentMethod,
-  remark
+  remark,
+  printReceipt
 }: {
   orderItems: OrderItem[];
   orderNumber: number;
@@ -16,8 +18,10 @@ export async function createOrderRecord({
   totalPrice: number;
   paymentMethod: string;
   remark: string;
+  printReceipt: boolean;
 }): Promise<void> {
   const orderRecord: OrderRecord = {
+    id: null, 
     orderItems,
     orderNumber,
     branchId: branch.id,
@@ -30,15 +34,18 @@ export async function createOrderRecord({
     remark: remark,
     tableCode: null,
     isReservation: null,
-    guestCount: null
+    guestCount: null,
+    orderedAt: new Date().toISOString()
   };
 
-  await fetch('http://localhost:8080/api/order-record/add', {
+  await fetch(`${config.API_BASE_URL}/api/order-record/add`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Accept': 'application/json'
+      'Accept': 'application/json',
+      'X-Print-Receipt': printReceipt.toString(),
+      'X-Print-Times': '2',
     },
     body: JSON.stringify(orderRecord)
   });
-} 
+}

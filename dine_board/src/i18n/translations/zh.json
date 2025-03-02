@@ -1,9 +1,10 @@
 {
-  "dashboard":{
+  "dashboard": {
     "dashboard": "主页",
     "selectBranch": "选择分店",
     "selectCategories": "选择类别",
-    "confirmSelect": "确认选择"
+    "confirmSelect": "确认选择",
+    "viewRecentOrders": "查看最近订单"
   },
   "orderFlow": {
     "title": "订单信息流",
@@ -24,4 +25,4 @@
     "ingredients": "配料",
     "customRemark": "备注"
   }
-} 
+}

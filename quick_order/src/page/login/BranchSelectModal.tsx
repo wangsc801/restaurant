@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Branch } from '../../types/Branch'
+import config from '../../config'
 
 interface BranchSelectModalProps {
   onClose: () => void;
@@ -16,7 +17,9 @@ const BranchSelectModal = ({ onClose, onSelect }: BranchSelectModalProps) => {
   useEffect(() => {
     const fetchBranches = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/branch');
+        const url = `${config.API_BASE_URL}/api/branch`;
+        console.log(url);
+        const response = await fetch(`${config.API_BASE_URL}/api/branch`);
         const data = await response.json();
         setBranches(data);
       } catch (error) {

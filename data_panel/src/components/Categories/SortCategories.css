@@ -1,0 +1,59 @@
+.sort-categories {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.instruction {
+    color: #666;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.category-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.category-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: grab;
+    transition: all 0.2s ease;
+}
+
+.category-item.dragging {
+    background-color: #f8f8f8;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+.drag-handle {
+    color: #999;
+    margin-right: 15px;
+    cursor: grab;
+}
+
+.category-name {
+    flex: 1;
+    font-weight: 500;
+}
+
+.weight {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.error-message {
+    color: #f44336;
+    text-align: center;
+    padding: 10px;
+    margin: 20px 0;
+    background-color: #ffebee;
+    border-radius: 4px;
+} 

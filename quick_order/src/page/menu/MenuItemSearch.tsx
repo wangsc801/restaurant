@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { MenuItem } from '../../types/MenuItem';
 import { useTranslation } from 'react-i18next';
 import './MenuItemSearch.css';
+import config from '../../config'
 
 interface MenuItemSearchProps {
   menuItems: MenuItem[];
@@ -23,7 +24,7 @@ const MenuItemSearch = ({
   const [filteredItems, setFilteredItems] = useState<MenuItem[]>([]);
 
   useEffect(() => {
-    const filtered = menuItems.filter(item => 
+    const filtered = menuItems.filter(item =>
       item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (item.abbr && item.abbr.toLowerCase().includes(searchTerm.toLowerCase()))
     );
@@ -49,7 +50,14 @@ const MenuItemSearch = ({
         <div className="items-grid">
           {filteredItems.map(item => (
             <div key={item.id} className="items-card">
-              <img src={'http://localhost:8080' + item.imagePath} alt={item.title} />
+              {item.image ? (
+                <img 
+                  src={`data:image/jpeg;base64,${item.image}`} 
+                  alt={item.title} 
+                />
+              ) : (
+                <div className="no-image-placeholder"></div>
+              )}
               <div className="items-info">
                 <h3>{item.title}</h3>
                 {item.abbr && <span className="abbr">{item.abbr}</span>}
@@ -64,7 +72,7 @@ const MenuItemSearch = ({
                   >
                     {t('menu.remarks')}
                   </button>
-                  <button 
+                  <button
                     className="add-to-checkout-list"
                     onClick={() => onAddToCheckoutList(item)}
                   >

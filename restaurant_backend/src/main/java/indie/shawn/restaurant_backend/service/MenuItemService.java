@@ -5,14 +5,11 @@ import indie.shawn.restaurant_backend.repository.MenuItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 // import java.util.Optional;
 // import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.Arrays;
 import java.text.Collator;
-import java.util.Locale;
 
 @Service
 public class MenuItemService {
@@ -58,10 +55,9 @@ public class MenuItemService {
      */
     public List<String> getAllUniqueCategories() {
         return menuItemRepository.findAll().stream()
-                .flatMap(menuItem -> menuItem.getCategories().stream())
-                .collect(Collectors.toCollection(HashSet::new)) // use HashSet to remove duplicates
-                .stream()
-                .collect(Collectors.toList()); // collect and return as List
+                .flatMap(menuItem -> menuItem
+                        .getCategories().stream())
+                .distinct().collect(Collectors.toList()); // collect and return as List
     }
 
     /**

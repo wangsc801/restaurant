@@ -38,7 +38,7 @@
   border-radius: 8px;
   padding: 15px;
   background-color: white;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   /* Ensure content doesn't force card wider */
   overflow: hidden;
 }
@@ -91,7 +91,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap; /* Allow wrapping if needed */
+  flex-wrap: wrap;
+  /* Allow wrapping if needed */
 }
 
 .item-header h4 {
@@ -118,4 +119,23 @@
 .record-footer p {
   margin: 5px 0;
   color: #555;
-} 
+}
+
+.print-receipt-section {
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
+}
+
+.print-button {
+  padding: 5px 10px;
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+}
+
+.print-button:hover {
+  background-color: #f0f0f0;
+}

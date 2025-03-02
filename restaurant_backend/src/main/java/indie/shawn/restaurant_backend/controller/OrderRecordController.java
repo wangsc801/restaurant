@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -22,10 +23,14 @@ public class OrderRecordController {
     ThermalPrinterService thermalPrinterService;
 
     @PostMapping("/add")
-    public OrderRecord add(@RequestBody OrderRecord orderRecord) throws IOException {
+    public OrderRecord add(@RequestBody OrderRecord orderRecord,
+                           @RequestHeader("X-Print-Receipt") Boolean printReceipt,
+                           @RequestHeader("X-Print-Times") Integer times) throws IOException {
         var order = orderRecordService.add(orderRecord, false);
-        thermalPrinterService.printCustomerReceipt(order);
-        thermalPrinterService.printKitchenReceipt(order);
+        System.out.println("times in header: " + times);
+        if (printReceipt) {
+            thermalPrinterService.printCustomerReceipt(order, times);
+        }
         return order;
     }
 
@@ -69,5 +74,18 @@ public class OrderRecordController {
     @PostMapping("/{id}/order-item/{orderItemId}/not-delivered")
     public Boolean setNotDeliveredByIdAndOrderItemId(@PathVariable String id, @PathVariable String orderItemId) {
         return orderRecordService.setDeliveredByIdAndOrderItemId(id, orderItemId, false);
+    }
+
+
+    @PostMapping("/{id}/print/times/{times}")
+    public void print(@PathVariable String id, @PathVariable Integer times) throws IOException {
+        Optional<OrderRecord> record = orderRecordService.findById(id);
+
+        if (record.isPresent()) {
+            thermalPrinterService.printCustomerReceipt(record.get(), times);
+
+        } else {
+            System.out.println("error happend while printing");
+        }
     }
 }

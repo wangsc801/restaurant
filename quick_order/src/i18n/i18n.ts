@@ -21,6 +21,7 @@ i18n
             loading: 'Loading...',
             backToMain: 'Back to Main',
             item: 'item',
+            print: 'print'
           },
           login: {
             title: 'Restaurant Login',
@@ -85,6 +86,7 @@ i18n
             other: 'Other Methods',
             selectPaymentMethod: 'Select a payment method',
             printerError: "Receipt Printer Error",
+            printReceipt: "Print a Receipt"
           },
           addItem: {
             title: 'Add Item',
@@ -122,6 +124,7 @@ i18n
             backToMain: '返回主页',
             item: '项目',
             remark: '备注',
+            print: '打印'
           },
           login: {
             title: '餐厅登录',
@@ -145,7 +148,7 @@ i18n
             order: '点餐',
             addToCart: '添加',
             remarks: '备注',
-            customizeItem: "自定义商品",
+            customizeItem: "自定义",
             refresh: "刷新",
             checkout: '结账',
             checkoutList: "结账单",
@@ -187,6 +190,7 @@ i18n
             other: '其他方式',
             selectPaymentMethod: '请选择支付方式',
             printerError: "小票打印机出错",
+            printReceipt: "打印小票"
           },
           addItem: {
             title: '添加商品',

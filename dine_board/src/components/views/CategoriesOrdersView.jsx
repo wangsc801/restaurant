@@ -62,7 +62,7 @@ const CategoriesOrdersView = () => {
     wsService.setInitialOrderIds(orders);
     
     // Connect to WebSocket for each category
-    wsService.connect(`/topic/orders/new/category/${category}/branch-id/${branchId}`);
+    wsService.connect(`/topic/orders/new/categories/${categories}/branch-id/${branchId}`);
 
     return () => {
       wsService.disconnect();

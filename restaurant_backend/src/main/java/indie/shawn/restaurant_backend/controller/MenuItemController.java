@@ -43,6 +43,11 @@ public class MenuItemController {
         return menuItemService.findAll();
     }
 
+    @GetMapping("/categories")
+    public List<String> getAllCategories() {
+        return menuItemService.getAllUniqueCategories();
+    }
+
     @GetMapping("/{id}")
     public MenuItem findById(@PathVariable String id){
         return menuItemService.findById(id);
@@ -117,11 +122,6 @@ public class MenuItemController {
         return ResponseEntity.ok(menuItemService.save(menuItem));
     }
 
-    @GetMapping("/categories")
-    public List<String> getAllCategories() {
-        return menuItemService.getAllUniqueCategories();
-    }
-
     @GetMapping("/tags")
     public List<String> getAllTags() {
         return menuItemService.getAllUniqueTags();
@@ -159,5 +159,6 @@ public class MenuItemController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
 }

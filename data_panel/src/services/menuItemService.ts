@@ -18,4 +18,9 @@ export const menuItemService = {
         const response = await axios.post(`${API_URL}/add`, item);
         return response.data;
     },
+
+    addMenuItem: async (item: Partial<MenuItem>): Promise<MenuItem> => {
+        const response = await axios.post(`${API_URL}/add`, item);
+        return response.data;
+    },
 }; 

@@ -136,4 +136,8 @@ public class OrderRecordService {
         messagingTemplate.convertAndSend("/topic/order-item/update", message);
         return res;
     }
+
+    public Optional<OrderRecord> findById(String id){
+        return orderRecordRepository.findById(id);
+    }
 }

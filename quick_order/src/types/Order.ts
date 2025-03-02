@@ -27,6 +27,7 @@ export interface OrderItem {
 }
 
 export interface OrderRecord {
+  id: string | null;
   orderItems: OrderItem[];
   orderNumber: number | null;
   branchId: string | null;

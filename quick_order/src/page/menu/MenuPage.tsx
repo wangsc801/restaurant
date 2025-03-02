@@ -10,8 +10,10 @@ import CheckoutSlide from './CheckoutSlide';
 // TypeScript Types
 import { OrderItem } from '../../types/Order';
 import { MenuItem } from '../../types/MenuItem';
+import {CategoriesSortWeight} from '../../types/CategoriesSortWeight'
 
 import './MenuPage.css';
+import config from '../../config'
 
 import { useNavigate } from 'react-router-dom';
 import MenuItemsGrid from './MenuItemsGrid';
@@ -23,6 +25,8 @@ const MenuPage = () => {
   const [selectedItem, setselectedItem] = useState<MenuItem | null>(null);
 
   const [orders, setOrders] = useState<OrderItem[]>([]);
+
+  const [categoriesSortWeight, setCategoriesSortWeight] = useState<CategoriesSortWeight>();
 
   const [isCheckoutSlideOpen, setIsCheckoutSlideOpen] = useState(false);
   const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
@@ -55,6 +59,7 @@ const MenuPage = () => {
           }
         }
         await fetchMenuItems();
+        await fetchCategoriesSortWeight();
       } catch (error) {
         console.error('In MenuPage.tsx: Error initializing state:', error);
       }
@@ -80,7 +85,7 @@ const MenuPage = () => {
   const fetchMenuItems = async () => {
     try {
       setIsRefreshing(false);
-      const response = await fetch('http://localhost:8080/api/menu-items');
+      const response = await fetch(`${config.API_BASE_URL}/api/menu-items`);
       const data = await response.json();
       setMenuItems(data);
     } catch (error) {
@@ -89,6 +94,19 @@ const MenuPage = () => {
       setIsRefreshing(false);
     }
   };
+
+  const fetchCategoriesSortWeight = async() => {
+    const localStorageBranch = localStorage.getItem('branch');
+    const branch = localStorageBranch ? JSON.parse(localStorage.getItem('branch') || '') : null;
+    try{
+      const response = await fetch(`${config.API_BASE_URL}/api/categories/sort-weight/branch-id/${branch.id}`)
+      const data = await response.json();
+      console.log(data)
+      setCategoriesSortWeight(data);
+    }catch (error){
+      console.error('Error fetching CategoriesSortWeight:', error)
+    }
+  }
 
   // Group items by category
   useEffect(() => {
@@ -112,9 +130,25 @@ const MenuPage = () => {
     //   return acc;
     // }, {});
 
-    setGroupByCategory(groupedCategories);
-    // setGroupByTags(groupedTags);
-  }, [menuItems]);
+    // const sortedGroupedCategories = Object.fromEntries(
+    //   Object.entries(groupedCategories).sort((a, b) => {
+    //     const weightA = categoriesSortWeight[a[0]] || Number.MAX_VALUE;
+    //     const weightB = categoriesSortWeight[b[0]] || Number.MAX_VALUE;
+    //     return weightA - weightB;
+    //   })
+    // );
+
+    const sortedGroupedCategories = Object.fromEntries(
+      Object.entries(groupedCategories).sort((a, b) => {
+        if (!categoriesSortWeight?.categories) return 0;
+        const weightA = categoriesSortWeight.categories.find(c => c.name === a[0])?.sortWeight || Number.MAX_VALUE;
+        const weightB = categoriesSortWeight.categories.find(c => c.name === b[0])?.sortWeight || Number.MAX_VALUE;
+        return weightA - weightB;
+      })
+    );
+
+    setGroupByCategory(sortedGroupedCategories);
+  }, [menuItems, categoriesSortWeight]);
 
   const handleRemarkClick = (item: MenuItem) => {
     setselectedItem(item);

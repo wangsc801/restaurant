@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { createOrderRecord } from '../../services/OrderService';
 import './CheckoutSlide.css';
+import config from '../../config'
 
 interface CheckoutSlideProps {
   orderItems: OrderItem[];
@@ -19,21 +20,21 @@ const CheckoutSlide = ({ orderItems, totalPrice, paymentMethod, onClose, onConfi
   const [orderCountToday, setOrderCountToday] = useState(0);
   const [showPaymentError, setShowPaymentError] = useState(false);
   const [remark, setRemark] = useState('');
+  const [printReceipt, setPrintReceipt] = useState(true);
   // const [showPrinterError, setShowPrinterError] = useState(false);
 
   const localStorageBranch = localStorage.getItem('branch');
   const branch = localStorageBranch ? JSON.parse(localStorageBranch) : null;
   const localStorageEmployee = localStorage.getItem('employee');
   const employee = localStorageEmployee ? JSON.parse(localStorageEmployee) : null;
+
   useEffect(() => {
     fetchOrderCount();
   }, []);
 
   const fetchOrderCount = async () => {
-
-    // const branchInfo = await window.electronAPI.getBranchInfo();
     try {
-      const response = await fetch('http://localhost:8080/api/order-quantity-of-date/today/branch-id/' + branch.id);
+      const response = await fetch(`${config.API_BASE_URL}/api/order-quantity-of-date/today/branch-id/` + branch.id);
       const data = await response.json();
       setOrderCountToday(data);
     } catch (error) {
@@ -50,11 +51,8 @@ const CheckoutSlide = ({ orderItems, totalPrice, paymentMethod, onClose, onConfi
 
     try {
       const payment = t(`checkout.${paymentMethod}`);
-      // const branchInfo = await window.electronAPI.getBranchInfo();
-      // const employeeInfo = await window.electronAPI.getEmployeeInfo();
-
       // Get new order count first
-      const response = await fetch('http://localhost:8080/api/order-quantity-of-date/today-add-one/branch-id/' + branch.id,
+      const response = await fetch(`${config.API_BASE_URL}/api/order-quantity-of-date/today-add-one/branch-id/` + branch.id,
         { method: 'POST' });
       const newCount = await response.json();
       setOrderCountToday(newCount);
@@ -67,7 +65,8 @@ const CheckoutSlide = ({ orderItems, totalPrice, paymentMethod, onClose, onConfi
         employee,
         totalPrice,
         paymentMethod: payment,
-        remark: remark
+        remark: remark,
+        printReceipt: printReceipt
       });
       onConfirm();
     } catch (error) {
@@ -124,6 +123,16 @@ const CheckoutSlide = ({ orderItems, totalPrice, paymentMethod, onClose, onConfi
               </button>
             ))}
           </div>
+        </div>
+        <div className="print-receipt-section">
+          <label className="print-receipt-checkbox">
+            <input
+              type="checkbox"
+              checked={printReceipt}
+              onChange={(e) => setPrintReceipt(e.target.checked)}
+            />
+            {t('checkout.printReceipt')}
+          </label>
         </div>
         <div className="remark-section">
           <h3>{t('menu.remarks')}</h3>

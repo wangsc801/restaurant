@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { OrderItem } from '../../types/Order';
 import { useTranslation } from 'react-i18next';
 import './CustomizeItemModal.css';
+import config from '../../config'
 
 interface CustomizeProductModalProps {
   onClose: () => void;
@@ -27,7 +28,7 @@ const CustomizeProductModal = ({ onClose, onSubmit }: CustomizeProductModalProps
     // Fetch categories only
     const fetchCategories = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/menu-items/categories');
+        const response = await fetch(`${config.API_BASE_URL}/api/menu-items/categories`);
         const categories = await response.json();
         setAvailableCategories(categories);
       } catch (error) {

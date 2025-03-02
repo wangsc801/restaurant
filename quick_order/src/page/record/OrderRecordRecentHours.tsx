@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 import './OrderRecordRecentHours.css';
 import { OrderRecord } from '../../types/Order';
+import config from '../../config'
 
 export default function OrderRecordRecentHours() {
   const { t } = useTranslation();
@@ -16,7 +17,7 @@ export default function OrderRecordRecentHours() {
       try {
         const branchId = JSON.parse(localStorage.branch).id;
         const response = await fetch(
-          `http://localhost:8080/api/order-record/get-recent-hours/${hours}/branch-id/${branchId}`
+          `${config.API_BASE_URL}/api/order-record/get-recent-hours/${hours}/branch-id/${branchId}`
         );
         const data = await response.json();
         setRecords(data);
@@ -38,6 +39,19 @@ export default function OrderRecordRecentHours() {
 
   const handleGoToMenu = () => {
     navigate('/menu');
+  };
+
+  const handlePrint = async (recordId: string) => {
+    try {
+      await fetch(`${config.API_BASE_URL}/api/order-record/${recordId}/print/times/1`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+    } catch (error) {
+      console.error('Error printing record:', error);
+    }
   };
 
   return (
@@ -97,6 +111,12 @@ export default function OrderRecordRecentHours() {
               {record.remark && (
                 <p>{t('common.remark')}: {record.remark}</p>
               )}
+              <button
+                className="print-button"
+                onClick={() => record.id && handlePrint(record.id)}
+              >
+                🖨️ {t('common.print')}
+              </button>
             </div>
           </div>
         ))}

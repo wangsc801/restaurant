@@ -17,6 +17,7 @@ public class OrderRecord {
     private String employeeId;    // Add this field
     private String tableCode;
     private Boolean isReservation;
+    private Boolean isPackage;
     private Integer guestCount;
     private LocalDateTime orderedAt;
     private LocalDateTime createdAt;
@@ -28,6 +29,7 @@ public class OrderRecord {
     private String paymentMethod;
     private String paymentStatus; // PENDING, PAID, FAILED
     private String orderStatus;   // NEW, PREPARING, READY, COMPLETED, CANCELLED
+    private String customerId;
     private String customerName;
     private String customerPhone;
     private String remark;        // Changed from 'notes' to match TypeScript
@@ -177,6 +179,14 @@ public class OrderRecord {
         this.orderStatus = orderStatus;
     }
 
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+
     public String getCustomerName() {
         return customerName;
     }
@@ -222,6 +232,7 @@ public class OrderRecord {
                 ", paymentMethod='" + paymentMethod + '\'' +
                 ", paymentStatus='" + paymentStatus + '\'' +
                 ", orderStatus='" + orderStatus + '\'' +
+                ", customerId='" + customerId + '\'' +
                 ", customerName='" + customerName + '\'' +
                 ", customerPhone='" + customerPhone + '\'' +
                 ", remark='" + remark + '\'' +

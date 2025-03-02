@@ -14,6 +14,7 @@ public class ThermalPrinterJsonConfig {
     private Integer port;
     private String charSet;
     private List<String> categories;
+    private List<String> assignedStalls;
 
     public String getPrinterName() {
         return printerName;
@@ -103,6 +104,14 @@ public class ThermalPrinterJsonConfig {
         this.categories = categories;
     }
 
+    public List<String> getAssignedStalls() {
+        return assignedStalls;
+    }
+
+    public void setAssignedStalls(List<String> assignedStalls) {
+        this.assignedStalls = assignedStalls;
+    }
+
     @Override
     public String toString() {
         return "ThermalPrinterJsonConfig{" +
@@ -117,6 +126,7 @@ public class ThermalPrinterJsonConfig {
                 ", port=" + port +
                 ", charSet='" + charSet + '\'' +
                 ", categories=" + categories +
+                ", assignedStalls=" + assignedStalls +
                 '}';
     }
 }

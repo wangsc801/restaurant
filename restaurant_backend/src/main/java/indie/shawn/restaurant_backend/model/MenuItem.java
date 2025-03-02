@@ -22,6 +22,7 @@ public class MenuItem {
     private String description;
     private String imagePath;
     private byte[] image;
+    private List<String> assignedStalls;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String remark;

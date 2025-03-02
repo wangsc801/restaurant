@@ -3,6 +3,8 @@ import './CategoryStatistic.css'
 import { useParams, useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
+import config from '../../config'
+
 // import dayjs from 'dayjs';
 interface SimpleMenuItemStatistic {
   menuItemTitle: string;
@@ -22,7 +24,7 @@ export default function CategoryStatistic() {
     const branchId = JSON.parse(localStorage.branch).id;
     const fetchData = async () => {
       // const formattedDate = dayjs().format('YYYY-MM-DD');
-      const url = `http://localhost:8080/api/statistic/category/date/${date}/branch-id/${branchId}`;
+      const url = `${config.API_BASE_URL}/api/statistic/category/date/${date}/branch-id/${branchId}`;
       const response = await fetch(url)
       const data = await response.json()
       // // 转换数据结构
@@ -36,7 +38,7 @@ export default function CategoryStatistic() {
       setStatisticMap(data);
     }
     const fetchTotal = async () => {
-      const url = `http://localhost:8080/api/statistic/total/date/${date}/branch-id/${branchId}`;
+      const url = `${config.API_BASE_URL}/api/statistic/total/date/${date}/branch-id/${branchId}`;
       const response = await fetch(url);
       const total = await response.json()
       setTotal(total);

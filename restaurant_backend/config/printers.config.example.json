@@ -9,13 +9,15 @@
     "ip": "192.168.123.160",
     "port": 9100,
     "usage": "kitchen",
-    "categories": ["soda","liquor"]
+    "categories": ["soda","liquor"],
+    "assignedStalls":["soda","liquor"]
   },
   {
     "connectionType": "LAN",
     "ip": "192.168.123.159",
     "port": 9100,
     "usage": "kitchen",
-    "categories": ["pizza","noodle"]
+    "categories": ["pizza","noodle"],
+    "assignedStalls":["pizza","noodle"]
   }
 ]
