@@ -1,0 +1,59 @@
+.thermal-printers {
+  padding: 16px;
+}
+
+.printer-section {
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.printer-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.printer-button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  background-color: #e2e2e2;
+  color: #333;
+}
+
+.printer-button.selected {
+  background-color: #1677ff;
+  color: white;
+}
+
+.message-textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+.print-button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  background-color: #1677ff;
+  color: white;
+  cursor: pointer;
+}
+
+.print-button:hover {
+  background-color: #4096ff;
+}
+
+.print-button:disabled {
+  background-color: #d9d9d9;
+  cursor: not-allowed;
+}

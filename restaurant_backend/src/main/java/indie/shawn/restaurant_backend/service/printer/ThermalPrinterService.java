@@ -13,17 +13,15 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import javax.print.PrintService;
-import javax.print.attribute.Attribute;
-import javax.print.attribute.AttributeSet;
-import javax.print.attribute.PrintServiceAttribute;
-import javax.print.DocFlavor;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ThermalPrinterService {
@@ -37,6 +35,34 @@ public class ThermalPrinterService {
         } catch (IOException e) {
             throw new RuntimeException("Failed to load printer configurations", e);
         }
+    }
+
+    public List<String> getThermalPrintersNameList() {
+        return printerConfigs.stream()
+                .map(ThermalPrinterJsonConfig::getPrinterName)
+                .collect(Collectors.toList());
+    }
+
+    public void printMessageByName(String printerName, String message) throws IOException {
+        PrintService printService = PrinterOutputStream.getPrintServiceByName(printerName);
+        PrinterOutputStream printerOutputStream = new PrinterOutputStream(printService);
+        Style styleSize3Center = new Style()
+                .setFontSize(Style.FontSize._3, Style.FontSize._3)
+                .setJustification(EscPosConst.Justification.Center);
+        EscPos escpos = null;
+        escpos = new EscPos(printerOutputStream);
+        escpos.setCharsetName("GB18030");
+        escpos.writeLF(styleSize3Center, "【" + message + "】");
+        escpos.flush();
+        escpos.feed(styleSize3Center, 5);
+        escpos.flush();
+        escpos.writeLF(LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM-dd HH:mm")));
+        escpos.flush();
+        escpos.feed(styleSize3Center, 5);
+        escpos.flush();
+        escpos.cut(EscPos.CutMode.PART);
+        escpos.flush();
+        escpos.close();
     }
 
     public ThermalPrinterJsonConfig getPrinterConfigByName(String printerName) {
@@ -212,24 +238,24 @@ public class ThermalPrinterService {
 
     private void escposCustomerReceiptTemplate(EscPos escpos, OrderRecord orderRecord) throws IOException {
         Style orderNumberStyle = new Style()
-                .setFontSize(Style.FontSize._3, Style.FontSize._3)
+                .setFontSize(Style.FontSize._2, Style.FontSize._2)
                 .setBold(true)
                 .setJustification(EscPosConst.Justification.Center);
         Style styleBoldSize2 = new Style().setFontSize(Style.FontSize._2, Style.FontSize._2).setBold(true);
         Style styleSize2 = new Style().setFontSize(Style.FontSize._2, Style.FontSize._2);
         Style styleSize1 = new Style().setFontSize(Style.FontSize._1, Style.FontSize._1);
-        escpos.writeLF(orderNumberStyle, orderRecord.getOrderNumber() + "号");
-        escpos.feed(2);
+        escpos.writeLF(orderNumberStyle, "序号：" + orderRecord.getOrderNumber() + "号");
+        escpos.feed(1);
         for (int i = 0; i < orderRecord.getOrderItems().size(); i++) {
             var item = orderRecord.getOrderItems().get(i);
             escpos.write(styleBoldSize2, (i + 1) + ". ");
             escpos.writeLF(styleBoldSize2, item.getTitle());
             if (item.getSpiciness() != null && !item.getSpiciness().isEmpty())
-                escpos.writeLF(styleSize1, "  辣度：" + item.getSpiciness());
+                escpos.writeLF(styleSize2, "  辣度：" + item.getSpiciness());
             if (!item.getSeasoning().isEmpty())
-                escpos.writeLF(styleSize1, "  调味：" + String.join(", ", item.getSeasoning()));
+                escpos.writeLF(styleSize2, "  调味：" + String.join(", ", item.getSeasoning()));
             if (!item.getIngredients().isEmpty())
-                escpos.writeLF(styleSize1, "  食材：" + String.join(", ", item.getIngredients()));
+                escpos.writeLF(styleSize2, "  食材：" + String.join(", ", item.getIngredients()));
             if (!item.getCustomRemark().isEmpty()) {
                 escpos.writeLF(styleBoldSize2, " 备注：" + item.getCustomRemark());
             }
@@ -243,13 +269,14 @@ public class ThermalPrinterService {
             } else {
                 escpos.writeLF(styleSize2, "  " + price + "元");
             }
-            escpos.feed(1);
+            escpos.feed(styleSize2, 1);
         }
         escpos.writeLF(styleSize2, "合计：" + String.format("%.2f", orderRecord.getTotal()) + "元");
-        escpos.writeLF(orderRecord.getOrderedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         escpos.feed(1);
-        escpos.writeLF(styleSize1, "支付方式：" + orderRecord.getPaymentMethod());
-        escpos.feed(5);
+        escpos.writeLF(orderRecord.getOrderedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + "  支付方式：" + orderRecord.getPaymentMethod());
+//        escpos.feed(1);
+//        escpos.writeLF(styleSize1, "支付方式：" + orderRecord.getPaymentMethod());
+        escpos.feed(styleSize2, 3);
         escpos.cut(EscPos.CutMode.FULL);
     }
 }

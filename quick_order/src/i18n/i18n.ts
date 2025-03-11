@@ -21,7 +21,8 @@ i18n
             loading: 'Loading...',
             backToMain: 'Back to Main',
             item: 'item',
-            print: 'print'
+            print: 'print',
+            printMessage: 'print message'
           },
           login: {
             title: 'Restaurant Login',
@@ -124,7 +125,8 @@ i18n
             backToMain: '返回主页',
             item: '项目',
             remark: '备注',
-            print: '打印'
+            print: '打印',
+            printMessage: '打印消息'
           },
           login: {
             title: '餐厅登录',

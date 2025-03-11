@@ -304,6 +304,14 @@ const MenuPage = () => {
                 {isRefreshing ? t('common.loading') : t('menu.refresh')}
               </button>
             </li>
+            <li>
+              <button 
+                className="nav-button checkout-button"
+                onClick={() => window.open('/thermal-printers', '_blank')}
+              >
+                {t('common.printMessage')}
+              </button>
+            </li>
           </ul>
         </nav>
       </div>
