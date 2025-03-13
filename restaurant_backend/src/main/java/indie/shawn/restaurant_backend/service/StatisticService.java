@@ -1,9 +1,11 @@
 package indie.shawn.restaurant_backend.service;
 
+import indie.shawn.restaurant_backend.model.MenuItem;
 import indie.shawn.restaurant_backend.model.OrderItem;
 import indie.shawn.restaurant_backend.model.OrderRecord;
 import indie.shawn.restaurant_backend.model.statistic.CategoryStatistic;
 import indie.shawn.restaurant_backend.model.statistic.SimpleMenuItemStatistic;
+import indie.shawn.restaurant_backend.repository.MenuItemRepository;
 import indie.shawn.restaurant_backend.repository.OrderRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
@@ -57,6 +59,9 @@ public class StatisticService {
     OrderRecordRepository orderRecordRepository;
 
     @Autowired
+    MenuItemRepository menuItemRepository;
+
+    @Autowired
     private MongoTemplate mongoTemplate;
 
 
@@ -83,6 +88,42 @@ public class StatisticService {
         return orders.stream()
                 .mapToDouble(OrderRecord::getTotal)
                 .sum();
+    }
+
+    public List<SimpleMenuItemStatistic> findByTagAndDateAndBranchId( String tag, String date, String branchId) {
+        List<OrderRecord> orders = findAllOrderRecordByDateAndBranchId(date, branchId);
+        List<SimpleMenuItemStatistic> simpleMenuItemStatisticList = new ArrayList<>();
+        for (var order : orders) {
+            for (var orderItem : order.getOrderItems()) {
+                String menuItemId = orderItem.getMenuItemId();
+                Optional<MenuItem> menuItemOpt = menuItemRepository.findById(menuItemId);
+                if (menuItemOpt.isPresent()) {
+                    var menuItem = menuItemOpt.get();
+                    var tags = menuItem.getTags();
+                    if (tags.contains(tag)) {
+                        SimpleMenuItemStatistic statistic = new SimpleMenuItemStatistic(menuItem.getTitle(),
+                                orderItem.getQuantity(), orderItem.getQuantity() * orderItem.getPrice());
+                        simpleMenuItemStatisticList.add(statistic);
+                    }
+                }
+            }
+        }
+        Map<String, SimpleMenuItemStatistic> aggregatedMap = new HashMap<>();
+
+        for (SimpleMenuItemStatistic statistic : simpleMenuItemStatisticList) {
+            if (aggregatedMap.containsKey(statistic.getMenuItemTitle())) {
+                SimpleMenuItemStatistic existingItem = aggregatedMap.get(statistic.getMenuItemTitle());
+                existingItem.setQuantity(existingItem.getQuantity() + statistic.getQuantity());
+                existingItem.setTotal(existingItem.getTotal() + statistic.getTotal());
+            } else {
+                aggregatedMap.put(statistic.getMenuItemTitle(), new SimpleMenuItemStatistic(statistic.getMenuItemTitle(), statistic.getQuantity(), statistic.getTotal()));
+            }
+        }
+
+        // 将Map中的值转换为List返回
+        return new ArrayList<>(aggregatedMap.values());
+
+//        return simpleMenuItemStatisticList;
     }
 
     public Map<String, List<SimpleMenuItemStatistic>> categoryStatistics(String date, String branchId) {

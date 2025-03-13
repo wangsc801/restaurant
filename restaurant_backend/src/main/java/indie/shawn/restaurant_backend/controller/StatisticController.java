@@ -27,4 +27,9 @@ public class StatisticController {
     public Map<String, List<SimpleMenuItemStatistic>> categoryStatisticOfTheDate(@PathVariable String date, @PathVariable String branchId) {
         return statisticService.categoryStatistics(date, branchId);
     }
+
+    @GetMapping("/tag/{tag}/date/{date}/branch-id/{branchId}")
+    public List<SimpleMenuItemStatistic> tagStatisticOfTheDate(@PathVariable String tag, @PathVariable String date, @PathVariable String branchId) {
+        return statisticService.findByTagAndDateAndBranchId(tag, date, branchId);
+    }
 }

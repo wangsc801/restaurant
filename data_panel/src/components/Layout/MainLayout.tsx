@@ -26,6 +26,11 @@ const MainLayout: React.FC = () => {
                                 Sort Categories
                             </Link>
                         </li>
+                        <li>
+                            <Link to={`/statistics/tag`} className="menu-button">
+                                根据标签获取
+                            </Link>
+                        </li>
                     </ul>
                 </nav>
             </div>

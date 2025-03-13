@@ -7,7 +7,7 @@ import CategorCategoriesPieCharts from './components/Statistics/CategoriesPieCha
 import AddMenuItem from './components/MenuItems/AddMenuItem';
 import SortCategories from './components/Categories/SortCategories';
 import './App.css'
-
+import GetQuantityAndTotalByTag from './components/Statistics/GetQuantityAndTotalByTag'
 const App: React.FC = () => {
     return (
         <BrowserRouter>
@@ -19,6 +19,7 @@ const App: React.FC = () => {
                     <Route path="/menu-items/add" element={<AddMenuItem />} />
                     <Route path="/statistics/category/:date" element={<CategorCategoriesPieCharts />} />
                     <Route path="/categories/sort" element={<SortCategories />} />
+                    <Route path="/statistics/tag" element={<GetQuantityAndTotalByTag/>} />
                 </Route>
             </Routes>
         </BrowserRouter>

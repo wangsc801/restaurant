@@ -1,0 +1,20 @@
+.quantity-tag-container {
+    padding: 20px;
+}
+
+.quantity-tag-input {
+    width: 200px;
+}
+
+.quantity-tag-result {
+    margin-top: 16px;
+    padding: 16px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+}
+
+.quantity-tag-result pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
