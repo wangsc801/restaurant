@@ -111,12 +111,14 @@ public class StatisticService {
         Map<String, SimpleMenuItemStatistic> aggregatedMap = new HashMap<>();
 
         for (SimpleMenuItemStatistic statistic : simpleMenuItemStatisticList) {
+            var currentTitleKey = statistic.getMenuItemTitle();
             if (aggregatedMap.containsKey(statistic.getMenuItemTitle())) {
                 SimpleMenuItemStatistic existingItem = aggregatedMap.get(statistic.getMenuItemTitle());
                 existingItem.setQuantity(existingItem.getQuantity() + statistic.getQuantity());
                 existingItem.setTotal(existingItem.getTotal() + statistic.getTotal());
             } else {
-                aggregatedMap.put(statistic.getMenuItemTitle(), new SimpleMenuItemStatistic(statistic.getMenuItemTitle(), statistic.getQuantity(), statistic.getTotal()));
+                var newStatistic = new SimpleMenuItemStatistic(statistic.getMenuItemTitle(), statistic.getQuantity(), statistic.getTotal());
+                aggregatedMap.put(statistic.getMenuItemTitle(), newStatistic);
             }
         }
 

@@ -23,7 +23,12 @@ public class MenuItemService {
 
     public List<MenuItem> findAll() {
         List<MenuItem> items = menuItemRepository.findAll();
-        
+
+        // 使用 Java Streams 进行过滤
+        List<MenuItem> filteredItems = items.stream()
+                .filter(item -> item.getOnShelf() == null || item.getOnShelf()) // 保留 getOnShelf 为 true 或 null 的元素
+                .toList();
+
         // Create a Chinese collator for pinyin sorting
         Collator collator = Collator.getInstance(Locale.CHINESE);
         
@@ -36,7 +41,6 @@ public class MenuItemService {
             if (titleCompare == 0) {
                 return Double.compare(item1.getPrice(), item2.getPrice());
             }
-            
             return titleCompare;
         });
         

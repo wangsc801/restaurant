@@ -30,7 +30,6 @@ public class CategoriesController {
 
     @PutMapping("/sort-weight/update")
     public CategoriesSortWeight update(@RequestBody CategoriesSortWeight c){
-        System.out.println(c);
         return categoriesSortWeightService.save(c);
     }
 }

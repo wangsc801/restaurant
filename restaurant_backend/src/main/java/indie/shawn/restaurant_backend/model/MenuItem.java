@@ -23,6 +23,7 @@ public class MenuItem {
     private String imagePath;
     private byte[] image;
     private List<String> assignedStalls;
+    private Boolean isOnShelf;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String remark;
@@ -143,6 +144,22 @@ public class MenuItem {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public List<String> getAssignedStalls() {
+        return assignedStalls;
+    }
+
+    public void setAssignedStalls(List<String> assignedStalls) {
+        this.assignedStalls = assignedStalls;
+    }
+
+    public Boolean getOnShelf() {
+        return isOnShelf;
+    }
+
+    public void setOnShelf(Boolean onShelf) {
+        isOnShelf = onShelf;
     }
 
     public byte[] getImage() {

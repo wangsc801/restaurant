@@ -30,7 +30,6 @@ function App() {
   const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
-    console.log('App component mounted')
     setIsLoaded(true)
   }, [])
 

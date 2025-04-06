@@ -18,7 +18,6 @@ const BranchSelectModal = ({ onClose, onSelect }: BranchSelectModalProps) => {
     const fetchBranches = async () => {
       try {
         const url = `${config.API_BASE_URL}/api/branch`;
-        console.log(url);
         const response = await fetch(`${config.API_BASE_URL}/api/branch`);
         const data = await response.json();
         setBranches(data);

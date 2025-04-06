@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 
 // Modals
 import RemarkModal from './RemarkModal';
-// import CheckoutModal from '../components/CheckoutModal';
 import CustomizeItemModal from './CustomizeItemModal';
 import CheckoutSlide from './CheckoutSlide';
 
@@ -18,6 +17,7 @@ import config from '../../config'
 import { useNavigate } from 'react-router-dom';
 import MenuItemsGrid from './MenuItemsGrid';
 import MenuItemSearch from './MenuItemSearch';
+import MenuNavColumn from './MenuNavColumn';
 
 const MenuPage = () => {
   const { t } = useTranslation();
@@ -101,7 +101,6 @@ const MenuPage = () => {
     try{
       const response = await fetch(`${config.API_BASE_URL}/api/categories/sort-weight/branch-id/${branch.id}`)
       const data = await response.json();
-      console.log(data)
       setCategoriesSortWeight(data);
     }catch (error){
       console.error('Error fetching CategoriesSortWeight:', error)
@@ -247,74 +246,25 @@ const MenuPage = () => {
     setIsSearching(true);
   };
 
+  const handlePrintClick = () => {
+    window.open('/thermal-printers', '_blank');
+  };
+
   return (
     <div className="menu-page">
       {/* Left Column - Navigation */}
-      <div className="nav-column">
-        <nav>
-          <ul>
-            <li>
-              <button
-                className="nav-button"
-                onClick={handleBackToMain}
-              >
-                {t('common.backToMain')}
-              </button>
-            </li>
-            <li>
-              <button
-                className={`nav-button ${selectedCategory === 'all' && !isSearching ? 'active' : ''}`}
-                onClick={() => handleCategoryClick('all')}
-              >
-                {t('menu.allItems')}
-              </button>
-            </li>
-            {Object.keys(groupByCategory).map(category => (
-              <li key={category}>
-                <button
-                  className={`nav-button ${selectedCategory === category && !isSearching ? 'active' : ''}`}
-                  onClick={() => handleCategoryClick(category)}
-                >
-                  {category}
-                </button>
-              </li>
-            ))}
-            <li>
-              <button
-                className={`nav-button search-button ${isSearching ? 'active' : ''}`}
-                onClick={handleSearchClick}
-              >
-                {t('menu.search')}
-              </button>
-            </li>
-            <li>
-              <button
-                className="nav-button customize-button"
-                onClick={handleCustomizeClick}
-              >
-                {t('menu.customizeItem')}
-              </button>
-            </li>
-            <li>
-              <button
-                className={`nav-button refresh-button ${isRefreshing ? 'loading' : ''}`}
-                onClick={handleRefresh}
-                disabled={isRefreshing}
-              >
-                {isRefreshing ? t('common.loading') : t('menu.refresh')}
-              </button>
-            </li>
-            <li>
-              <button 
-                className="nav-button checkout-button"
-                onClick={() => window.open('/thermal-printers', '_blank')}
-              >
-                {t('common.printMessage')}
-              </button>
-            </li>
-          </ul>
-        </nav>
-      </div>
+      <MenuNavColumn 
+        selectedCategory={selectedCategory}
+        isSearching={isSearching}
+        isRefreshing={isRefreshing}
+        groupByCategory={groupByCategory}
+        onCategoryClick={handleCategoryClick}
+        onSearchClick={handleSearchClick}
+        onCustomizeClick={handleCustomizeClick}
+        onRefresh={handleRefresh}
+        onBackToMain={handleBackToMain}
+        onPrintClick={handlePrintClick}
+      />
 
       {/* Middle Column - Dish Cards */}
       {isSearching ? (

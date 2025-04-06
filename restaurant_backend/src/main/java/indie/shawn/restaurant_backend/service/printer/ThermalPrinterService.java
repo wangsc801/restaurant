@@ -52,7 +52,7 @@ public class ThermalPrinterService {
         EscPos escpos = null;
         escpos = new EscPos(printerOutputStream);
         escpos.setCharsetName("GB18030");
-        escpos.writeLF(styleSize3Center, "【" + message + "】");
+        escpos.writeLF(styleSize3Center, message);
         escpos.flush();
         escpos.feed(styleSize3Center, 5);
         escpos.flush();
@@ -264,7 +264,7 @@ public class ThermalPrinterService {
             if (item.getQuantity() > 1) {
                 var quantity = item.getQuantity();
                 double itemTotal = price * quantity;
-                String text = "  " + price + "元x" + quantity + " [" + itemTotal + "元]";
+                String text = String.format("  %.1f元x%d [%.1f元]", price, quantity, itemTotal);
                 escpos.writeLF(styleSize2, text);
             } else {
                 escpos.writeLF(styleSize2, "  " + price + "元");

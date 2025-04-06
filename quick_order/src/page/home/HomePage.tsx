@@ -9,7 +9,6 @@ import dayjs from 'dayjs';
 
 const MainPage = () => {
   const { date } = useParams();
-  console.log(date)
   const formattedDate = dayjs().format('YYYY-MM-DD');
 
   const { t } = useTranslation();

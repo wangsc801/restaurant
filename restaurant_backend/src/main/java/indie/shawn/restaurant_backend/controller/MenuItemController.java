@@ -19,10 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.Base64;
+import java.util.*;
 import java.net.MalformedURLException;
 
 @RestController
@@ -41,6 +38,23 @@ public class MenuItemController {
     @GetMapping(value = "")
     public List<MenuItem> getAllMenuItems() {
         return menuItemService.findAll();
+    }
+
+    @GetMapping(value = "/simple")
+    public List<MenuItem> getAllMenuItemsSimple() {
+        Map<String,List<String>> map = new HashMap<>();
+        var items =  menuItemService.findAll();
+        for (var item : items) {
+            String category = String.valueOf(item.getCategories());
+            String titleAndPricePair = "(" + item.getTitle() + ", " + item.getPrice() + ")"; // 构造(title, price)形式的字符串
+
+            // 如果map中还没有这个category，则初始化一个空列表
+            map.putIfAbsent(category, new ArrayList<>());
+
+            // 将(title, price)字符串添加到对应category的列表中
+            map.get(category).add(titleAndPricePair);
+        }
+        return items;
     }
 
     @GetMapping("/categories")
@@ -96,7 +110,6 @@ public class MenuItemController {
         try {
             // Create absolute path for upload directory
             Path uploadPath = Paths.get(uploadPathMenuItem).toAbsolutePath();
-            System.out.println("Upload directory absolute path: " + uploadPath);
             
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
@@ -129,15 +142,12 @@ public class MenuItemController {
 
     @PostMapping("/add")
     public MenuItem add(@RequestBody MenuItem menuItem){
-        System.out.println(menuItem);
         return menuItemService.save(menuItem);
     }
 
     @PostMapping("/update")
     public MenuItem update(@RequestBody MenuItem menuItem){
         menuItem.setUpdatedAt(LocalDateTime.now());
-        System.out.println("update");
-        System.out.println(menuItem);
         return menuItemService.save(menuItem);
     }
 

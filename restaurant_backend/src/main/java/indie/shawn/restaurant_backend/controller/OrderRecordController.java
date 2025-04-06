@@ -27,7 +27,6 @@ public class OrderRecordController {
                            @RequestHeader("X-Print-Receipt") Boolean printReceipt,
                            @RequestHeader("X-Print-Times") Integer times) throws IOException {
         var order = orderRecordService.add(orderRecord, false);
-        System.out.println("times in header: " + times);
         if (printReceipt) {
             thermalPrinterService.printCustomerReceipt(order, times);
         }
