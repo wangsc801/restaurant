@@ -15,9 +15,9 @@ const AddMenuItem: React.FC = () => {
         categories: [],
         tags: [],
         price: 0,
-        moneySymbol: '$',
-        unit: 'piece',
-        abbr: '',
+        moneySymbol: '￥',
+        unit: '份',
+        //abbr: '',
         description: '',
         remark: ''
     });
@@ -180,7 +180,7 @@ const AddMenuItem: React.FC = () => {
                         onChange={handleInputChange}
                     />
                 </div>
-
+                {/*
                 <div className="form-group">
                     <label>Abbreviation</label>
                     <input
@@ -190,7 +190,7 @@ const AddMenuItem: React.FC = () => {
                         onChange={handleInputChange}
                     />
                 </div>
-
+                */}
                 <div className="form-group">
                     <label>Description</label>
                     <textarea

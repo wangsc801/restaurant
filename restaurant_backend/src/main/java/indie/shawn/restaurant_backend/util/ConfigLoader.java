@@ -26,13 +26,17 @@ public class ConfigLoader {
 //    }
 
     public static String loadConfig(String filename) throws IOException {
-        return new String(Files.readAllBytes(Paths.get(filename)));
+        // First try to load from external config file
+        File externalFile = new File(filename);
+        if (externalFile.exists()) {
+            return new String(Files.readAllBytes(externalFile.toPath()));
+        }
 
         // If external config doesn't exist, load from resources
-//        var resource = new ClassPathResource(filename);
-//        try (Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8)) {
-//            return FileCopyUtils.copyToString(reader);
-//        }
+        var resource = new ClassPathResource(filename);
+        try (Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8)) {
+            return FileCopyUtils.copyToString(reader);
+        }
     }
 
     public static List<ThermalPrinterJsonConfig> loadPrinterConfigs(String content) throws IOException {

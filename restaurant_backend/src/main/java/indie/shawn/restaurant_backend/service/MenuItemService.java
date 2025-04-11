@@ -2,6 +2,11 @@ package indie.shawn.restaurant_backend.service;
 
 import indie.shawn.restaurant_backend.model.MenuItem;
 import indie.shawn.restaurant_backend.repository.MenuItemRepository;
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +23,36 @@ public class MenuItemService {
     MenuItemRepository menuItemRepository;
 
     public MenuItem save(MenuItem menuItem) {
+        String title = menuItem.getTitle();
+        StringBuilder abbr = new StringBuilder();
+        
+        // Process each character in the title
+        for (int i = 0; i < title.length(); i++) {
+            char c = title.charAt(i);
+            
+            // If it's a Chinese character
+            if (Character.UnicodeBlock.of(c) == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS) {
+                try {
+                    // Convert Chinese character to pinyin
+                    HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
+                    format.setCaseType(HanyuPinyinCaseType.UPPERCASE);
+                    format.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+                    
+                    String[] pinyinArray = PinyinHelper.toHanyuPinyinStringArray(c, format);
+                    if (pinyinArray != null && pinyinArray.length > 0) {
+                        abbr.append(pinyinArray[0].charAt(0)); // Take first letter of pinyin
+                    }
+                } catch (BadHanyuPinyinOutputFormatCombination e) {
+                    // If conversion fails, just skip this character
+                    continue;
+                }
+            } 
+            // If it's an English word (start of a word)
+            else if (Character.isLetter(c) && (i == 0 || !Character.isLetter(title.charAt(i - 1)))) {
+                abbr.append(Character.toUpperCase(c)); // Add the first letter of each English word
+            }
+        }
+        menuItem.setAbbr(abbr.toString());
         return menuItemRepository.save(menuItem);
     }
 
