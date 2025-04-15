@@ -11,6 +11,8 @@ import "./i18n/i18n";
 import OrderRecordRecentHours from './page/record/OrderRecordRecentHours';
 import CategoryStatistic from './page/statistic/CategoryStatistic';
 import ThermalPrinters from './page/miscellaneous/ThermalPrinters';
+import Menu from './page/menu/Menu';
+import MenuForOrdering from './page/menu/MenuForOrdering';
 
 function Navigation() {
 
@@ -47,6 +49,8 @@ function App() {
               <Route path="/menu" element={<MenuPage />} />
               <Route path="/order-records/hours/:hours" element={<OrderRecordRecentHours />} />
               <Route path="/category-statistics/:date" element={<CategoryStatistic />} />
+              <Route path="/sole-menu" element={<Menu />} />
+              <Route path="/menu-for-ordering" element={<MenuForOrdering />} />
               <Route path="/thermal-printers" element={<ThermalPrinters />} />
             </Routes>
           ) : (

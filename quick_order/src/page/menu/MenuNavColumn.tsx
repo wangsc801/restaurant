@@ -10,8 +10,6 @@ interface MenuNavColumnProps {
   onSearchClick: () => void;
   onCustomizeClick: () => void;
   onRefresh: () => void;
-  onBackToMain: () => void;
-  onPrintClick: () => void;
 }
 
 const MenuNavColumn: React.FC<MenuNavColumnProps> = ({
@@ -22,9 +20,7 @@ const MenuNavColumn: React.FC<MenuNavColumnProps> = ({
   onCategoryClick,
   onSearchClick,
   onCustomizeClick,
-  onRefresh,
-  onBackToMain,
-  onPrintClick
+  onRefresh
 }) => {
   const { t } = useTranslation();
 
@@ -32,14 +28,6 @@ const MenuNavColumn: React.FC<MenuNavColumnProps> = ({
     <div className="nav-column">
       <nav>
         <ul>
-          <li>
-            <button
-              className="nav-button"
-              onClick={onBackToMain}
-            >
-              {t('common.backToMain')}
-            </button>
-          </li>
           <li>
             <button
               className={`nav-button ${selectedCategory === 'all' && !isSearching ? 'active' : ''}`}
@@ -81,14 +69,6 @@ const MenuNavColumn: React.FC<MenuNavColumnProps> = ({
               disabled={isRefreshing}
             >
               {isRefreshing ? t('common.loading') : t('menu.refresh')}
-            </button>
-          </li>
-          <li>
-            <button 
-              className="nav-button checkout-button"
-              onClick={onPrintClick}
-            >
-              {t('common.printMessage')}
             </button>
           </li>
         </ul>

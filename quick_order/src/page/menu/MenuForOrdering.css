@@ -1,0 +1,13 @@
+.menu-page {
+    display: grid;
+    grid-template-columns: 200px 1fr 400px;
+    min-height: 100vh;
+    gap: 0;
+    padding: 0;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }

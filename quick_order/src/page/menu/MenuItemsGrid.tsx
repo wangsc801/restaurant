@@ -6,7 +6,7 @@ interface MenuItemsGridProps {
   selectedCategory: string;
   menuItems: MenuItem[];
   groupByCategory: Record<string, MenuItem[]>;
-  isRefreshing: boolean;
+  // 移除 isRefreshing
   onRemarkClick: (item: MenuItem) => void;
   onAddToCheckoutList: (item: MenuItem) => void;
 }
@@ -15,14 +15,14 @@ const MenuItemsGrid = ({
   selectedCategory,
   menuItems,
   groupByCategory,
-  isRefreshing,
+  // 移除 isRefreshing
   onRemarkClick,
   onAddToCheckoutList
 }: MenuItemsGridProps) => {
   const { t } = useTranslation();
 
   return (
-    <div className={`items-column ${isRefreshing ? 'loading' : ''}`}>
+    <div className="items-column">
       <div className="items-grid">
         {(selectedCategory === 'all' ? menuItems : groupByCategory[selectedCategory] || [])
           .map(item => (
@@ -64,4 +64,4 @@ const MenuItemsGrid = ({
   );
 };
 
-export default MenuItemsGrid; 
+export default MenuItemsGrid;

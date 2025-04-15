@@ -13,10 +13,6 @@ export default function OrderRecordRecentHours() {
   const [records, setRecords] = useState<OrderRecord[]>([]);
 
   useEffect(() => {
-    document.title = '最近订单';
-  }, []);
-
-  useEffect(() => {
     const fetchRecords = async () => {
       try {
         const branchId = JSON.parse(localStorage.branch).id;

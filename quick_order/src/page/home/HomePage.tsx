@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
 import { Branch } from '../../types/Branch';
 import { Employee } from '../../types/Employee';
 import './HomePage.css';
 import dayjs from 'dayjs';
 
 const MainPage = () => {
-  const { date } = useParams();
   const formattedDate = dayjs().format('YYYY-MM-DD');
 
   const { t } = useTranslation();
@@ -21,8 +19,6 @@ const MainPage = () => {
       const localStorageBranch = localStorage.getItem('branch');
       const branch = localStorageBranch ? JSON.parse(localStorage.getItem('branch') || '') : null;
       const employee = localStorageBranch ? JSON.parse(localStorage.getItem('employee') || '') : null;
-      // const branch = await window.electronAPI.getBranchInfo();
-      // const employee = await window.electronAPI.getEmployeeInfo();
       setBranch(branch);
       setEmployee(employee);
     };
@@ -57,10 +53,10 @@ const MainPage = () => {
           <div className="secondary-options">
             <button
               className="option-button"
-            // onClick={() => navigate('/order-management')}
+            onClick={() => window.open('/thermal-printers', '_blank')}
             >
-              <span className="icon">📋</span>
-              <span className="text">{t('home.orderManagement')}</span>
+              <span className="icon">🖨️</span>
+              <span className="text">{t('common.printMessage')}</span>
             </button>
 
             <button
@@ -105,10 +101,6 @@ const MainPage = () => {
           <a href="#" className="docker-item">
             <span className="docker-icon">👥</span>
             <span className="docker-text">Users</span>
-          </a>
-          <a href="#" className="docker-item">
-            <span className="docker-icon">📱</span>
-            <span className="docker-text">Apps</span>
           </a>
         </div>
       </div>

@@ -14,7 +14,6 @@ import {CategoriesSortWeight} from '../../types/CategoriesSortWeight'
 import './MenuPage.css';
 import config from '../../config'
 
-import { useNavigate } from 'react-router-dom';
 import MenuItemsGrid from './MenuItemsGrid';
 import MenuItemSearch from './MenuItemSearch';
 import MenuNavColumn from './MenuNavColumn';
@@ -35,8 +34,6 @@ const MenuPage = () => {
   const [groupByCategory, setGroupByCategory] = useState<{ [category: string]: MenuItem[] }>({});
 
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-
-  const navigate = useNavigate();
 
   // Add loading state
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -119,24 +116,6 @@ const MenuPage = () => {
       return acc;
     }, {});
 
-    // const groupedTags = menuItems.reduce<Record<string, MenuItem[]>>((acc, item) => {
-    //   item.tags.forEach(tag => {
-    //     if (!acc[tag]) {
-    //       acc[tag] = [];
-    //     }
-    //     acc[tag].push(item);
-    //   });
-    //   return acc;
-    // }, {});
-
-    // const sortedGroupedCategories = Object.fromEntries(
-    //   Object.entries(groupedCategories).sort((a, b) => {
-    //     const weightA = categoriesSortWeight[a[0]] || Number.MAX_VALUE;
-    //     const weightB = categoriesSortWeight[b[0]] || Number.MAX_VALUE;
-    //     return weightA - weightB;
-    //   })
-    // );
-
     const sortedGroupedCategories = Object.fromEntries(
       Object.entries(groupedCategories).sort((a, b) => {
         if (!categoriesSortWeight?.categories) return 0;
@@ -181,7 +160,6 @@ const MenuPage = () => {
   };
 
   const handleDeleteOrder = (index: number) => {
-    // setOrders(prev => prev.filter((_, i) => i !== index));
     setOrders(prev => {
       const newOrders = prev.filter((_, i) => i !== index);
       if (newOrders.length === 0) {
@@ -213,10 +191,6 @@ const MenuPage = () => {
     setIsCustomizeOpen(false);
   };
 
-  const handleBackToMain = () => {
-    navigate('/home');
-  };
-
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
     setIsSearching(false);  // Exit search mode when category is selected
@@ -246,10 +220,6 @@ const MenuPage = () => {
     setIsSearching(true);
   };
 
-  const handlePrintClick = () => {
-    window.open('/thermal-printers', '_blank');
-  };
-
   return (
     <div className="menu-page">
       {/* Left Column - Navigation */}
@@ -262,8 +232,6 @@ const MenuPage = () => {
         onSearchClick={handleSearchClick}
         onCustomizeClick={handleCustomizeClick}
         onRefresh={handleRefresh}
-        onBackToMain={handleBackToMain}
-        onPrintClick={handlePrintClick}
       />
 
       {/* Middle Column - Dish Cards */}
@@ -280,7 +248,6 @@ const MenuPage = () => {
           selectedCategory={selectedCategory}
           menuItems={menuItems}
           groupByCategory={groupByCategory}
-          isRefreshing={isRefreshing}
           onRemarkClick={handleRemarkClick}
           onAddToCheckoutList={handleAddToCheckoutList}
         />
@@ -291,9 +258,11 @@ const MenuPage = () => {
         <div className="order-list">
           <h2>{t('menu.checkoutList')}</h2>
           <div className="orders">
+            
             {orders.map((order, index) => (
               <div key={index} className="order-item">
                 <div className="order-item-header">
+                <button className="delete-button" onClick={() => handleDeleteOrder(index)}>×</button>
                   <span className="item-name">{order.title + " (" + order.price + ")"}</span>
                   <div className="quantity-controls">
                     <button onClick={() => handleQuantityChange(index, -1)}>-</button>
@@ -311,7 +280,7 @@ const MenuPage = () => {
                       {order.customRemark && <span>{order.customRemark}</span>}
                     </div>
                   )}
-                <button className="delete-button" onClick={() => handleDeleteOrder(index)}>×</button>
+                
               </div>
             ))}
           </div>
